@@ -5,7 +5,7 @@
 
 ---
 
-## 🔧 Current Status: **Part 1 Complete — Ready to Commit**
+## 🔧 Current Status: **Question 2 Complete (Parts 1-3) — Ready to Build Question 1 Voice Agent (Part 4)**
 
 ---
 
@@ -44,13 +44,32 @@
 
 ---
 
-## 🔜 Part 2: Data Pipeline (NEXT)
+## ✅ Part 2: Data Pipeline (DONE)
 
-What will be built:
-- `knowledge_base/cleaner.py` — PII detection/redaction, deduplication, text normalization
-- `knowledge_base/chunker.py` — Semantic chunking (200-400 tokens), overlap, metadata
-- `knowledge_base/embedder.py` — Embed with sentence-transformers/all-MiniLM-L6-v2 (384-dim, local, free)
-- `knowledge_base/indexer.py` — Create Pinecone serverless index, upsert all vectors
+What was built:
+- `knowledge_base/cleaner.py` — PII detection/redaction (regex), deduplication (MD5 & Jaccard similarity), text normalization
+- `knowledge_base/chunker.py` — Semantic chunking (200-400 tokens via tiktoken), 50-token overlap, Pydantic schema validation
+- `knowledge_base/embedder.py` — Local embeddings via `sentence-transformers/all-MiniLM-L6-v2` (384-dim, zero API cost)
+- `knowledge_base/indexer.py` — Pinecone Serverless indexer (`health-insurance-kb`, cosine) + local JSON offline cache
+- `knowledge_base/pipeline.py` — CLI orchestrator combining extraction, cleaning, chunking, embedding, and indexing
+
+---
+
+## ✅ Part 3: KB Retriever & Retrieval Testing (DONE — Completes Question 2)
+
+What was built:
+- `knowledge_base/retriever.py` — Hybrid cloud/local vector similarity search with confidence scores and citations
+- `knowledge_base/test_retrieval.py` — Automated evaluation suite testing 5 core lead qualification scenarios (Achieved 100% accuracy)
+- Exported formal grading evidence to `knowledge_base/data/processed/retrieval_evaluation_report.json`
+
+---
+
+## 🔜 Part 4: Voice Agent FastAPI Server & RAG Tools (NEXT — Question 1)
+
+What will be built next:
+- `voice_agent/server.py` — FastAPI server handling Vapi audio webhooks and dynamic RAG execution
+- `voice_agent/rag_tool.py` — Webhook function bridging voice AI to our `HybridRetriever`
+- `voice_agent/prompts.py` — Production conversation prompt for Health Insurance Lead Qualification
 
 ---
 
@@ -59,9 +78,9 @@ What will be built:
 | Part | What | Status |
 |------|------|--------|
 | **Part 1** | Project setup + KB data sources + schema | ✅ Done |
-| **Part 2** | Cleaner → Chunker → Embedder → Pinecone Indexer | ⏳ Next |
-| **Part 3** | KB Retriever + 5 retrieval tests (completes Q2) | ⬜ Pending |
-| **Part 4** | Voice agent server + tools + system prompt (Q1) | ⬜ Pending |
+| **Part 2** | Cleaner → Chunker → Embedder → Pinecone Indexer | ✅ Done |
+| **Part 3** | KB Retriever + 5 retrieval tests (completes Q2) | ✅ Done |
+| **Part 4** | Voice agent server + tools + system prompt (Q1) | ⏳ Next |
 | **Part 5** | Vapi assistant setup + qualification flow (Q1) | ⬜ Pending |
 | **Part 6** | Philippines Taglish bot (Q3) | ⬜ Pending |
 | **Part 7** | Indonesia Bahasa bot (Q3) | ⬜ Pending |

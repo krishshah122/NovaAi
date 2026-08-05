@@ -16,6 +16,8 @@ Thumbs.db
 *.wav
 *.mp3
 *.mp4
-
+knowledge_base/data
 # Logs
 *.log
+.data
+knowledge_base/data/processed/kb_records.json
