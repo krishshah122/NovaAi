@@ -64,5 +64,16 @@
     "consultation_notes": "Caller expressed severe emotional stress regarding surgery claim dispute and explicitly demanded human supervisor.",
     "status": "REQUIRES_HUMAN_ESCALATION",
     "assigned_agent": "Human Onboarding Specialist"
+  },
+  {
+    "lead_id": "lead_a2a1e7bf",
+    "timestamp": "2026-08-06T08:19:28.297714",
+    "caller_name": "Caller",
+    "contact_info": "Not Provided",
+    "household_size": 1,
+    "interested_plan_type": "Quantum Shield Plan Inquiry",
+    "consultation_notes": "Caller asked about Darwich-like quantum shield plan, which is not in current health insurance policy guidelines. Needs human escalation.",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
   }
 ]

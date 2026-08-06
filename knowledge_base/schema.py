@@ -86,6 +86,10 @@ class KBRecord(BaseModel):
         default_factory=list,
         description="Searchable tags for retrieval"
     )
+    country: str = Field(
+        default="usa",
+        description="Target market country or dialect region (usa / philippines / indonesia)"
+    )
     created_at: str = Field(
         default_factory=lambda: datetime.utcnow().isoformat(),
         description="ISO timestamp of record creation"

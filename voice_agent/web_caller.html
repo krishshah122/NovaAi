@@ -208,6 +208,41 @@
             text-align: left;
             line-height: 1.5;
         }
+
+        .region-selector {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 0 0 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-region {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid #475569;
+            color: #cbd5e1;
+            padding: 0.6rem 1.2rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-region:hover {
+            background: rgba(51, 65, 85, 0.8);
+            border-color: #64748b;
+        }
+
+        .btn-region.active {
+            background: linear-gradient(135deg, #6366f1, #3b82f6);
+            color: #ffffff;
+            border-color: #818cf8;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -215,7 +250,13 @@
 <div class="container">
     <div class="header">
         <h1>Darwix AI Advisor</h1>
-        <p>Real-Time Health Insurance Consultation & Lead Qualification<br>Powered by Vapi, Groq Llama-3 & Pinecone RAG</p>
+        <p>Real-Time Health Insurance & Multifinance Advisory<br>Powered by Vapi, Groq Llama-3 & Pinecone Vector RAG</p>
+    </div>
+
+    <div class="region-selector" id="regionSelector">
+        <button class="btn-region active" data-region="us">🇺🇸 US English (Health)</button>
+        <button class="btn-region" data-region="ph">🇵🇭 Philippines (Taglish - Mika)</button>
+        <button class="btn-region" data-region="id">🇮🇩 Indonesia (Bahasa - Budi)</button>
     </div>
 
     <div class="status-pill">
@@ -237,7 +278,7 @@
     <div class="section-title">⚡ System Webhook & SDK Logs</div>
     <div class="log-box" id="logConsole">
         [SYSTEM] Professional Voice Interface with Live Transcription loaded.<br>
-        [READY] Press 'Call Darwix Advisor' above to begin your live voice check!
+        [READY] Select your targeted country region above and hit 'Call Darwix Advisor'!
     </div>
 </div>
 
@@ -259,6 +300,38 @@
         logConsole.innerHTML += `<br>[${new Date().toLocaleTimeString()}] ${msg}`;
         logConsole.scrollTop = logConsole.scrollHeight;
     }
+
+    // Region Switcher Logic
+    const regionButtons = document.querySelectorAll('.btn-region');
+    regionButtons.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (isCallActive) {
+                alert("Please end the active call before switching country regions.");
+                return;
+            }
+            regionButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const selectedRegion = btn.getAttribute('data-region');
+            log(`⏳ Switching cloud voice bot to region [${selectedRegion.toUpperCase()}]...`);
+            statusText.innerText = "Reconfiguring AI Persona & Language...";
+            
+            try {
+                const res = await fetch(`/api/switch_assistant?region=${selectedRegion}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    log(`✅ Activated: ${data.bot_name}! Ready for live calls.`);
+                    statusText.innerText = `Ready (${selectedRegion.toUpperCase()} Dialect Active)`;
+                } else {
+                    log(`❌ Error switching region: ${data.error}`);
+                    statusText.innerText = "System Ready (Fallback mode)";
+                }
+            } catch (err) {
+                log(`❌ Failed to reach backend switcher API: ${err.message}`);
+                statusText.innerText = "System Ready (Offline switcher)";
+            }
+        });
+    });
 
     function addTranscript(sender, text) {
         if (!hasTranscriptStarted) {

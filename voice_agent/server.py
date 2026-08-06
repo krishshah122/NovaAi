@@ -69,6 +69,75 @@ async def get_client_config():
     }
 
 
+@app.api_route("/api/switch_assistant", methods=["GET", "POST"], tags=["UI"])
+async def switch_assistant_region(region: str = "us"):
+    """Dynamically switch Vapi Cloud Assistant persona, language prompt, and tools between US, PH, and ID."""
+    import requests, os
+    from voice_agent.prompts import LEAD_QUALIFICATION_SYSTEM_PROMPT
+    from multilingual_bots.philippines_bot import PHILIPPINES_TAGLISH_PROMPT
+    from multilingual_bots.indonesia_bot import INDONESIA_BAHASA_PROMPT
+    
+    api_key = os.getenv("VAPI_API_KEY", "d2685516-ae94-4892-8abd-4db236d65f64")
+    asst_id = os.getenv("VAPI_ASSISTANT_ID", "e3f52f6f-a0f7-4c1e-99d6-09e5dd9f024f")
+    url = "https://majority-ribcage-contented.ngrok-free.dev/webhook/vapi"
+    
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    
+    try:
+        cur_req = requests.get(f"https://api.vapi.ai/assistant/{asst_id}", headers=headers, timeout=10)
+        cur = cur_req.json()
+    except Exception as e:
+        return {"success": False, "error": f"Vapi API connection failed: {str(e)}"}
+
+    model = cur.get("model", {})
+    tools_def = [
+        {
+            "type": "function",
+            "function": {
+                "name": "query_knowledge_base",
+                "description": "Search vector database for health insurance or regional financial policies.",
+                "parameters": {"type": "object", "properties": {"question": {"type": "string"}}, "required": ["question"]}
+            },
+            "server": {"url": url}
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "submit_lead_to_crm",
+                "description": "Submit qualified customer profile into CRM.",
+                "parameters": {"type": "object", "properties": {"caller_name": {"type": "string"}, "interested_plan_type": {"type": "string"}, "notes": {"type": "string"}}, "required": ["caller_name", "interested_plan_type"]}
+            },
+            "server": {"url": url}
+        }
+    ]
+    model["tools"] = tools_def
+
+    if region.lower() == "ph":
+        bot_name = "Darwix Philippines - Taglish Bancassurance Advisor (Mika)"
+        model["messages"] = [{"role": "system", "content": PHILIPPINES_TAGLISH_PROMPT}]
+        voice = {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM", "stability": 0.55, "similarityBoost": 0.8}
+    elif region.lower() == "id":
+        bot_name = "Darwix Indonesia - Bahasa Multifinance Advisor (Budi)"
+        model["messages"] = [{"role": "system", "content": INDONESIA_BAHASA_PROMPT}]
+        voice = {"provider": "11labs", "voiceId": "VR6AewLTigWG4xSOukaG", "stability": 0.60, "similarityBoost": 0.85}
+    else:
+        bot_name = "Darwix US - Health Insurance Specialist"
+        model["messages"] = [{"role": "system", "content": LEAD_QUALIFICATION_SYSTEM_PROMPT}]
+        voice = cur.get("voice", {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM"})
+        region = "us"
+
+    payload = {"name": bot_name, "model": model, "voice": voice, "serverUrl": url}
+    try:
+        p = requests.patch(f"https://api.vapi.ai/assistant/{asst_id}", json=payload, headers=headers, timeout=10)
+        if p.status_code == 200:
+            print(f"   -> 🌐 Switched live cloud voice bot to: [{bot_name}]")
+            return {"success": True, "region": region, "bot_name": bot_name}
+        else:
+            return {"success": False, "error": f"Vapi returned {p.status_code}: {p.text}"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 @app.get("/", tags=["Health"])
 async def root_status():
     """Verify backend webhook server functionality."""
