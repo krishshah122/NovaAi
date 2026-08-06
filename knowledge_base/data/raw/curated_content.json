@@ -158,5 +158,15 @@
     "source": "manual_entry",
     "source_url": null,
     "tags": ["compliance", "disclosure", "regulation", "agent", "prohibited", "customer rights"]
+  },
+  {
+    "id": "supp_plan_darwix_quantum_shield_2026",
+    "title": "The Darwix AI Quantum Shield 2026 Plan",
+    "content": "The Darwix AI Quantum Shield 2026 plan is our exclusive proprietary enterprise health package designed specifically for tech innovators. It features an exact annual deductible of $1,427 and an ultra-low fixed copay of $11 per visit.\n\nExclusive Unique Benefits of the Quantum Shield 2026 Plan:\n• 100% full reimbursement for AI ergonomic therapies and virtual robotic consultations\n• Zero-deductible preventive telemedicine coverage with immediate doctor dispatch\n• Guaranteed fixed premium locked at $188 per month with zero rate increases for 3 years\n• Custom wellness rewards program providing $500 annual credit towards bio-hacking health wearables and nutritional tracking sensors.",
+    "category": "product_plans",
+    "subcategory": "quantum_shield_plan",
+    "source": "manual_entry",
+    "source_url": null,
+    "tags": ["quantum shield", "darwix ai plan", "1427 deductible", "ergonomic therapy", "bio-hacking", "188 premium"]
   }
 ]

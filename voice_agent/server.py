@@ -8,7 +8,7 @@ import sys
 import json
 
 from fastapi import FastAPI, Request, HTTPException, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pathlib import Path
@@ -37,6 +37,38 @@ app.add_middleware(
 )
 
 
+@app.get("/call", response_class=HTMLResponse, tags=["UI"])
+async def serve_web_caller():
+    """Serve the clean interactive Web Calling audio application interface."""
+    html_path = Path(__file__).resolve().parent / "web_caller.html"
+    if not html_path.exists():
+        return HTMLResponse(content="<h1>Error: web_caller.html not found in voice_agent directory</h1>", status_code=404)
+    with open(html_path, "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read(), status_code=200)
+
+
+@app.get("/api/config", tags=["UI"])
+async def get_client_config():
+    """Securely serve frontend client connection configuration without exposing keys in visible form inputs."""
+    import os
+    pub_key = os.getenv("VAPI_PUBLIC_KEY") or os.getenv("VAPI_API_KEY", "d2685516-ae94-4892-8abd-4db236d65f64")
+    asst_id = os.getenv("VAPI_ASSISTANT_ID", "")
+    
+    config_path = Path(__file__).resolve().parent / "data" / "vapi_assistant_config.json"
+    if config_path.exists():
+        try:
+            with open(config_path, "r", encoding="utf-8") as cf:
+                asst_data = json.load(cf)
+                asst_id = asst_data.get("id", asst_id)
+        except Exception:
+            pass
+
+    return {
+        "public_key": pub_key,
+        "assistant_id": asst_id
+    }
+
+
 @app.get("/", tags=["Health"])
 async def root_status():
     """Verify backend webhook server functionality."""
@@ -44,7 +76,8 @@ async def root_status():
         "status": "ONLINE",
         "service": "Darwix AI Assessment RAG Webhook Endpoint",
         "version": "1.0",
-        "webhook_uri": "/webhook/vapi"
+        "webhook_uri": "/webhook/vapi",
+        "web_caller_ui": "/call"
     }
 
 

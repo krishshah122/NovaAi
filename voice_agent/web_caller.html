@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darwix AI — Health Insurance Voice Advisor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090b10;
+            --card-bg: rgba(22, 27, 39, 0.7);
+            --border-glow: rgba(99, 102, 241, 0.3);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.4);
+            --accent-red: #ef4444;
+            --accent-blue: #6366f1;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 10%, rgba(99, 102, 241, 0.15), transparent 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a855f7, #6366f1, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 1.5rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #64748b;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--accent-green);
+            box-shadow: 0 0 12px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        .dot.talking {
+            background: #3b82f6;
+            box-shadow: 0 0 12px #3b82f6;
+            animation: pulse-blue 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .call-action {
+            margin: 1rem 0 2rem 0;
+        }
+
+        .btn-call {
+            background: var(--accent-green);
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 1.2rem 3.2rem;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            box-shadow: 0 0 25px var(--accent-green-glow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-call:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 38px var(--accent-green-glow);
+            background: #059669;
+        }
+
+        .btn-call.end-call {
+            background: var(--accent-red);
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-call.end-call:hover {
+            background: #dc2626;
+            box-shadow: 0 0 35px rgba(239, 68, 68, 0.6);
+        }
+
+        .section-title {
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-sub);
+            margin: 1rem 0 0.4rem 0.2rem;
+            font-weight: 700;
+        }
+
+        .transcript-box {
+            height: 180px;
+            overflow-y: auto;
+            background: #060913;
+            border: 1px solid #1e293b;
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .bubble {
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+
+        .bubble.user {
+            align-self: flex-end;
+            background: rgba(99, 102, 241, 0.25);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #e2e8f0;
+        }
+
+        .bubble.assistant {
+            align-self: flex-start;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+        }
+
+        .bubble.system {
+            align-self: center;
+            background: rgba(30, 41, 59, 0.5);
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border: 1px dashed #334155;
+        }
+
+        .log-box {
+            height: 100px;
+            overflow-y: auto;
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #10b981;
+            text-align: left;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Darwix AI Advisor</h1>
+        <p>Real-Time Health Insurance Consultation & Lead Qualification<br>Powered by Vapi, Groq Llama-3 & Pinecone RAG</p>
+    </div>
+
+    <div class="status-pill">
+        <div class="dot" id="statusDot"></div>
+        <span id="statusText">System Ready (Disconnected)</span>
+    </div>
+
+    <div class="call-action">
+        <button id="callButton" class="btn-call">
+            <span>📞 Call Darwix Advisor</span>
+        </button>
+    </div>
+
+    <div class="section-title">🎙️ Real-Time Call Transcript</div>
+    <div class="transcript-box" id="transcriptContainer">
+        <div class="bubble system">Conversation transcript will stream live as you speak...</div>
+    </div>
+
+    <div class="section-title">⚡ System Webhook & SDK Logs</div>
+    <div class="log-box" id="logConsole">
+        [SYSTEM] Professional Voice Interface with Live Transcription loaded.<br>
+        [READY] Press 'Call Darwix Advisor' above to begin your live voice check!
+    </div>
+</div>
+
+<script type="module">
+    import Vapi from "https://esm.sh/@vapi-ai/web@2.6.1";
+    window.Vapi = Vapi;
+
+    let vapiInstance = null;
+    let isCallActive = false;
+    let hasTranscriptStarted = false;
+
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const callButton = document.getElementById('callButton');
+    const logConsole = document.getElementById('logConsole');
+    const transcriptContainer = document.getElementById('transcriptContainer');
+
+    function log(msg) {
+        logConsole.innerHTML += `<br>[${new Date().toLocaleTimeString()}] ${msg}`;
+        logConsole.scrollTop = logConsole.scrollHeight;
+    }
+
+    function addTranscript(sender, text) {
+        if (!hasTranscriptStarted) {
+            transcriptContainer.innerHTML = '';
+            hasTranscriptStarted = true;
+        }
+        const bubble = document.createElement('div');
+        bubble.className = `bubble ${sender}`;
+        const prefix = sender === 'user' ? '👤 You' : '🤖 Darwix Advisor';
+        bubble.innerHTML = `<strong>${prefix}:</strong> ${text}`;
+        transcriptContainer.appendChild(bubble);
+        transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+    }
+
+    function toggleCall() {
+        if (isCallActive) {
+            stopCall();
+        } else {
+            startCall();
+        }
+    }
+
+    callButton.addEventListener('click', toggleCall);
+    window.toggleCall = toggleCall;
+
+    async function startCall() {
+        log("Resolving backend voice agent parameters via /api/config...");
+        try {
+            const resp = await fetch('/api/config');
+            if (!resp.ok) {
+                throw new Error("Could not connect to FastAPI server endpoint (/api/config).");
+            }
+            const config = await resp.json();
+            
+            if (!config.public_key || !config.assistant_id) {
+                log("⚠️ WARNING: Missing Assistant UUID in backend configuration.");
+                alert("Cannot start call: Vapi Assistant UUID not configured in backend server environment!");
+                return;
+            }
+
+            log("Initializing Vapi Speech Engine v2.6.1...");
+            vapiInstance = new Vapi(config.public_key);
+
+            vapiInstance.on('call-start', () => {
+                isCallActive = true;
+                statusDot.className = "dot active";
+                statusText.innerText = "Call Connected (Listening)";
+                callButton.className = "btn-call end-call";
+                callButton.innerHTML = "<span>🛑 End Consultation</span>";
+                log("Call Connected! Speak directly into your microphone now.");
+                addTranscript("system", "📞 Audio channel connected. Start speaking!");
+                hasTranscriptStarted = false; // Reset to allow clear first bubble
+            });
+
+            vapiInstance.on('speech-start', () => {
+                statusDot.className = "dot talking";
+                statusText.innerText = "Advisor Speaking...";
+                log("Darwix Advisor is responding...");
+            });
+
+            vapiInstance.on('speech-end', () => {
+                statusDot.className = "dot active";
+                statusText.innerText = "Call Connected (Listening for your voice)";
+            });
+
+            // Listen for live transcript streaming events
+            vapiInstance.on('message', (message) => {
+                if (message.type === 'transcript' && message.transcriptType === 'final') {
+                    const role = message.role === 'user' ? 'user' : 'assistant';
+                    addTranscript(role, message.transcript);
+                }
+            });
+
+            vapiInstance.on('call-end', () => {
+                resetUI();
+                log("Consultation ended by server or user.");
+            });
+
+            vapiInstance.on('error', (err) => {
+                console.error(err);
+                log("Error: " + (err.message || JSON.stringify(err)));
+                resetUI();
+            });
+
+            log("Requesting microphone permissions & opening WebSocket channel...");
+            vapiInstance.start(config.assistant_id);
+
+        } catch (e) {
+            log("❌ Startup failed: " + e.message);
+            alert("Connection error: " + e.message + "\nMake sure you are accessing this interface via http://localhost:8000/call");
+        }
+    }
+
+    function stopCall() {
+        if (vapiInstance) {
+            vapiInstance.stop();
+            log("Disconnecting call...");
+        }
+        resetUI();
+    }
+
+    function resetUI() {
+        isCallActive = false;
+        statusDot.className = "dot";
+        statusText.innerText = "System Ready (Disconnected)";
+        callButton.className = "btn-call";
+        callButton.innerHTML = "<span>📞 Call Darwix Advisor</span>";
+    }
+</script>
+</body>
+</html>
