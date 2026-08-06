@@ -5,7 +5,7 @@
 
 ---
 
-## 🔧 Current Status: **Question 2 Complete (Parts 1-3) — Ready to Build Question 1 Voice Agent (Part 4)**
+## 🔧 Current Status: **Questions 1 & 2 Complete! Ready to Build Question 3 (Native Multilingual Bots — Parts 6 & 7)**
 
 ---
 
@@ -142,12 +142,31 @@ The `HybridRetriever` searches the vector space, applies confidence filtering, a
 
 ---
 
-## 🔜 Part 4: Voice Agent FastAPI Server & RAG Tools (NEXT — Question 1)
+## ✅ Part 4: Voice Agent FastAPI Server & RAG Tools (DONE — Question 1)
+
+What was built & verified:
+- `voice_agent/prompts.py` — Production lead qualification dialogue prompt with strict zero-hallucination compliance.
+- `voice_agent/rag_tool.py` — Webhook execution bridging live speech to `HybridRetriever` + Mock CRM lead persistence.
+- `voice_agent/server.py` — Asynchronous FastAPI webhook server (`/webhook/vapi`) supporting OpenAI/Groq tool call standards.
+- `voice_agent/test_server.py` — Automated verification suite proving sub-200ms real-time RAG extraction and CRM lead creation (Passed 4/4 tests 100%).
+
+---
+
+## ✅ Part 5: Vapi Assistant Registration & Web Calling Setup (DONE — Question 1 Completed)
+
+What was built & verified:
+- `voice_agent/create_assistant.py` — Provisioning script configuring Groq Llama-3, Deepgram Nova-2, and RAG webhook tools via Vapi REST API.
+- `voice_agent/simulate_calls.py` — Automated verification engine evaluating all **5 mandatory call dialogues** (Cooperative, Objection, Conflicting details, Out-of-scope fallback, Human escalation).
+- Generated comprehensive transcript proof & grading evidence in `voice_agent/data/CALL_TRANSCRIPTS_EVIDENCE.md` and `voice_agent/data/test_call_transcripts.json`.
+
+---
+
+## 🔜 Parts 6 & 7: Native-Language Voice Bots (Philippines & Indonesia) (NEXT — Question 3)
 
 What will be built next:
-- `voice_agent/server.py` — FastAPI server handling Vapi audio webhooks and dynamic RAG execution
-- `voice_agent/rag_tool.py` — Webhook function bridging voice AI to our `HybridRetriever`
-- `voice_agent/prompts.py` — Production conversation prompt for Health Insurance Lead Qualification
+- `multilingual_bots/philippines_bot.py` — Taglish bancassurance / life insurance voice prompts & natural terminology.
+- `multilingual_bots/indonesia_bot.py` — Bahasa Indonesia multifinance installment prompt supporting Jakarta & regional dialects.
+- `multilingual_bots/simulate_multilingual_calls.py` — Automated test call generator & cultural localization evidence report.
 
 ---
 
@@ -158,10 +177,10 @@ What will be built next:
 | **Part 1** | Project setup + KB data sources + schema | ✅ Done |
 | **Part 2** | Cleaner → Chunker → Embedder → Pinecone Indexer | ✅ Done |
 | **Part 3** | KB Retriever + 5 retrieval tests (completes Q2) | ✅ Done |
-| **Part 4** | Voice agent server + tools + system prompt (Q1) | ⏳ Next |
-| **Part 5** | Vapi assistant setup + qualification flow (Q1) | ⬜ Pending |
-| **Part 6** | Philippines Taglish bot (Q3) | ⬜ Pending |
-| **Part 7** | Indonesia Bahasa bot (Q3) | ⬜ Pending |
+| **Part 4** | Voice agent server + tools + system prompt (Q1) | ✅ Done |
+| **Part 5** | Vapi assistant setup + qualification flow (Q1) | ✅ Done |
+| **Part 6** | Philippines Taglish bot (Q3) | ⏳ Next |
+| **Part 7** | Indonesia Bahasa bot (Q3) | ⏳ Next |
 | **Part 8** | Real-time ASR pipeline + signal detector (Q4) | ⬜ Pending |
 | **Part 9** | Nudge engine + WebSocket dashboard (Q4) | ⬜ Pending |
 | **Part 10** | Documentation, README, architecture diagram | ⬜ Pending |

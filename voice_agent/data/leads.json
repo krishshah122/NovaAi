@@ -1,0 +1,68 @@
+[
+  {
+    "lead_id": "lead_dc3e5345",
+    "timestamp": "2026-08-05T14:18:22.045565",
+    "caller_name": "Dr. Ramesh Patil",
+    "contact_info": "+91-9876543210",
+    "household_size": 4,
+    "interested_plan_type": "Gold Family Floater / SEP",
+    "consultation_notes": "Caller requested special coverage exception and asked for immediate licensed human consultation.",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
+  },
+  {
+    "lead_id": "lead_c3c0792f",
+    "timestamp": "2026-08-06T03:43:30.649500",
+    "caller_name": "Anita Desai",
+    "contact_info": "9876543210",
+    "household_size": 3,
+    "interested_plan_type": "Silver Plan",
+    "consultation_notes": "Caller educated on Bronze vs Silver deductible trade-offs. Ready for onboarding.",
+    "status": "QUALIFIED_LEAD",
+    "assigned_agent": "Automated Nudge System"
+  },
+  {
+    "lead_id": "lead_63dfd7bf",
+    "timestamp": "2026-08-06T03:43:31.168044",
+    "caller_name": "Rahul K.",
+    "contact_info": "Not Shared",
+    "household_size": 1,
+    "interested_plan_type": "Bronze / Catastrophic Emergency Plan",
+    "consultation_notes": "Handled 'young and healthy' pricing objection via emergency protection narrative.",
+    "status": "QUALIFIED_LEAD",
+    "assigned_agent": "Automated Nudge System"
+  },
+  {
+    "lead_id": "lead_e7e3a85a",
+    "timestamp": "2026-08-06T03:43:31.660926",
+    "caller_name": "Pooja S.",
+    "contact_info": "Not Shared",
+    "household_size": 2,
+    "interested_plan_type": "SEP Qualifying Marriage/Move",
+    "consultation_notes": "Corrected misinformation regarding enrollment timing; identified valid Special Enrollment Period life event.",
+    "status": "QUALIFIED_LEAD",
+    "assigned_agent": "Automated Nudge System"
+  },
+  {
+    "lead_id": "lead_94625fcb",
+    "timestamp": "2026-08-06T03:43:32.068097",
+    "caller_name": "Vikram V.",
+    "contact_info": "Not Shared",
+    "household_size": 1,
+    "interested_plan_type": "Out of Scope Inquiry",
+    "consultation_notes": "Caller asked unverified financial investment questions. Executed safe zero-hallucination fallback.",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
+  },
+  {
+    "lead_id": "lead_86743921",
+    "timestamp": "2026-08-06T03:43:32.086111",
+    "caller_name": "Dr. Suresh M.",
+    "contact_info": "Emergency Caller",
+    "household_size": 2,
+    "interested_plan_type": "Claim Dispute / Pre-Existing Surgery",
+    "consultation_notes": "Caller expressed severe emotional stress regarding surgery claim dispute and explicitly demanded human supervisor.",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
+  }
+]
