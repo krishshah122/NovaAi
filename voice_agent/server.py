@@ -113,15 +113,15 @@ async def switch_assistant_region(region: str = "us"):
     model["tools"] = tools_def
 
     if region.lower() == "ph":
-        bot_name = "Darwix Philippines - Taglish Bancassurance Advisor (Mika)"
+        bot_name = "Darwix PH Taglish Bot"
         model["messages"] = [{"role": "system", "content": PHILIPPINES_TAGLISH_PROMPT}]
         voice = {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM", "stability": 0.55, "similarityBoost": 0.8}
     elif region.lower() == "id":
-        bot_name = "Darwix Indonesia - Bahasa Multifinance Advisor (Budi)"
+        bot_name = "Darwix ID Bahasa Bot"
         model["messages"] = [{"role": "system", "content": INDONESIA_BAHASA_PROMPT}]
         voice = {"provider": "11labs", "voiceId": "VR6AewLTigWG4xSOukaG", "stability": 0.60, "similarityBoost": 0.85}
     else:
-        bot_name = "Darwix US - Health Insurance Specialist"
+        bot_name = "Darwix US Health Advisor"
         model["messages"] = [{"role": "system", "content": LEAD_QUALIFICATION_SYSTEM_PROMPT}]
         voice = cur.get("voice", {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM"})
         region = "us"
