@@ -113,7 +113,9 @@ def run_call_simulations():
                     out = execute_query_knowledge_base(step["query"])
                     print(f"    🛠️  Tool Exer: {tool}('{step['query']}') -> Retrieved valid passages.")
                 elif tool == "submit_lead_to_crm":
-                    out = execute_submit_lead_to_crm(**step["args"])
+                    args = step.get("args", {})
+                    if isinstance(args, dict):
+                        out = execute_submit_lead_to_crm(**args)
                     print(f"    🛠️  Tool Exer: {tool}(...) -> Lead CRM updated.")
             else:
                 spk = step["speaker"]

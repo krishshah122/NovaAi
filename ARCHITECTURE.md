@@ -14,13 +14,13 @@ graph TD
     classDef groq fill:#ef4444,stroke:#991b1b,stroke-width:2px,color:#fff;
 
     %% Nodes
-    User((User Voice)):::frontend
-    Browser[Web Caller UI<br/>(HTML/JS)]:::frontend
-    Vapi[Vapi AI Cloud<br/>Voice Agent Orchestrator]:::vapi
-    FastAPI[FastAPI Webhook Server<br/>(Darwix Backend)]:::backend
-    Pinecone[(Pinecone Vector DB<br/>RAG Knowledge)]:::db
-    GroqLLM[Groq Llama-3<br/>Nudge Engine]:::groq
-    CRM[(Mock CRM<br/>leads.json)]:::db
+    User(("User Voice")):::frontend
+    Browser["Web Caller UI<br/>(HTML/JS)"]:::frontend
+    Vapi["Vapi AI Cloud<br/>Voice Agent Orchestrator"]:::vapi
+    FastAPI["FastAPI Webhook Server<br/>(Darwix Backend)"]:::backend
+    Pinecone[("Pinecone Vector DB<br/>RAG Knowledge")]:::db
+    GroqLLM["Groq Llama-3<br/>Nudge Engine"]:::groq
+    CRM[("Mock CRM<br/>leads.json")]:::db
 
     %% Connections
     User <-->|Mic / Speaker| Browser
