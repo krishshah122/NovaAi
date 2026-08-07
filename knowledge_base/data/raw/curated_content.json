@@ -235,5 +235,45 @@
     "source_url": null,
     "tags": ["kemahalan", "bunga mahal", "dp kurang", "objection", "cicilan ringan", "all-risk"],
     "country": "indonesia"
+  },
+  {
+    "id": "health_faq_dental_vision",
+    "title": "Dental and Vision Coverage FAQ",
+    "content": "Dental and vision coverage for adults is not classified as an essential health benefit under the ACA. Therefore, most standard health insurance plans (Bronze, Silver, Gold) do not include adult dental or vision coverage. You must purchase a separate standalone dental or vision plan. However, pediatric dental and vision care for children under 19 IS an essential health benefit and is included in all standard marketplace plans.",
+    "category": "faq",
+    "subcategory": "dental_vision",
+    "source": "healthcare.gov",
+    "source_url": null,
+    "tags": ["dental", "vision", "teeth", "eyes", "adults", "pediatric"]
+  },
+  {
+    "id": "health_policy_grace_period",
+    "title": "Premium Payment Grace Period Policy",
+    "content": "If you fail to pay your monthly premium on time, you enter a grace period. For individuals receiving Premium Tax Credits (APTC), the grace period is 90 days. During the first 30 days, your insurer must still pay your medical claims. In days 31-90, the insurer may pend (hold) claims. If you do not pay your full past-due balance by the 90th day, your policy will be retroactively terminated to the last day of the first month of the grace period. For individuals not receiving tax credits, the grace period is typically only 31 days based on state laws.",
+    "category": "policy",
+    "subcategory": "grace_period",
+    "source": "healthcare.gov",
+    "source_url": null,
+    "tags": ["grace period", "late payment", "unpaid premium", "termination"]
+  },
+  {
+    "id": "health_product_platinum_plus",
+    "title": "Darwix Platinum Health Plus 2026",
+    "content": "The Darwix Platinum Health Plus 2026 plan is our premium offering. It features a $0 deductible and a $1,500 out-of-pocket maximum. Monthly premiums average $750 for individuals. This plan covers 90% of all medical costs, leaving you with only 10% coinsurance. It includes unlimited primary care visits with a $15 copay and specialist visits with a $30 copay. Prescription drugs are covered with a flat $10 generic copay. This plan is ideal for individuals with chronic conditions or those anticipating surgery.",
+    "category": "product_plans",
+    "subcategory": "platinum",
+    "source": "darwix_internal_product_docs_2026",
+    "source_url": null,
+    "tags": ["platinum", "zero deductible", "copay", "premium"]
+  },
+  {
+    "id": "us_objection_i_am_healthy",
+    "title": "US Objection: I am healthy and don't need insurance",
+    "content": "If a caller states they are healthy and don't need insurance, respond: 'I completely understand that you are in great health right now. However, health insurance isn't just for when you are sick; it protects your financial future from unexpected accidents. An unexpected trip to the emergency room for a broken bone or sudden appendicitis can easily cost over $30,000 out of pocket. By securing a catastrophic or bronze plan, you cap your maximum financial risk for a very low monthly cost.'",
+    "category": "objection_handling",
+    "subcategory": "us_objections",
+    "source": "darwix_us_sales_playbook",
+    "source_url": null,
+    "tags": ["healthy", "don't need insurance", "objection", "emergency room"]
   }
 ]

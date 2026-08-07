@@ -36,29 +36,29 @@ def run_assessment_retrieval_tests() -> List[RetrievalTestResult]:
 
     test_scenarios = [
         {
-            "query": "What are the deductibles, premiums, and coverage cost differences between Bronze and Silver health plans?",
-            "expected_terms": ["bronze", "silver", "deductible", "premium", "cost", "60%", "70%"],
-            "explanation": "Properly retrieves Bronze/Silver plan comparison metadata showing monthly premium trade-offs against out-of-pocket deductible costs."
+            "query": "What is the exact deductible and out-of-pocket maximum for the Darwix Platinum Health Plus 2026 plan?",
+            "expected_terms": ["platinum", "deductible", "out-of-pocket", "1,500", "750", "copay"],
+            "explanation": "Properly retrieves specific product pricing data for the newly added Platinum Health Plus plan."
         },
         {
-            "query": "Am I eligible for Medicare, Medicaid, or premium tax credit subsidies to lower costs if my income recently dropped?",
-            "expected_terms": ["eligib", "medicaid", "medicare", "subsidy", "income", "credit", "lower cost"],
-            "explanation": "Retrieves federal government assistance programs and marketplace income qualification criteria for low-cost health coverage."
-        },
-        {
-            "query": "Why should I bother paying for health insurance? I am young and healthy and never visit the hospital.",
-            "expected_terms": ["young", "healthy", "objection", "emergency", "accident", "financial", "protect", "risk"],
-            "explanation": "Successfully links natural conversation pushback to our Objection Handling records explaining unforeseen medical emergency protection."
-        },
-        {
-            "query": "What benefits are guaranteed as Essential Health Benefits (EHB) and pre-existing conditions under the Affordable Care Act (ACA)?",
-            "expected_terms": ["essential health", "ehb", "aca", "affordable care act", "pre-existing", "preventive", "coverage"],
-            "explanation": "Accurately finds legal statutory protections under the ACA mandating coverages for chronic conditions and preventive screenings."
+            "query": "What happens if I miss my premium payment and I get tax credits? How long is the grace period before termination?",
+            "expected_terms": ["grace period", "90 days", "tax credit", "terminate", "premium payment"],
+            "explanation": "Retrieves the exact newly added policy regarding grace periods for APTC recipients."
         },
         {
             "query": "Can I sign up for health insurance coverage right now outside of the standard Open Enrollment period if I recently got married or moved?",
-            "expected_terms": ["special enrollment", "sep", "outside", "open enrollment", "life event", "married", "move", "qualifying"],
-            "explanation": "Retrieves Special Enrollment Period (SEP) qualification rules governing qualifying life events like marriage or relocation."
+            "expected_terms": ["special enrollment", "sep", "outside", "open enrollment", "life event", "married", "move"],
+            "explanation": "Retrieves Special Enrollment Period (SEP) qualification rules governing qualifying life events like marriage."
+        },
+        {
+            "query": "Does standard Bronze or Silver marketplace health insurance cover adult dental and vision care?",
+            "expected_terms": ["dental", "vision", "adults", "essential health benefit", "pediatric", "separate"],
+            "explanation": "Accurately finds the FAQ explaining that adult dental/vision requires separate plans but pediatric is included."
+        },
+        {
+            "query": "Why should I bother paying for health insurance? I am young, healthy, and don't need it.",
+            "expected_terms": ["healthy", "don't need insurance", "emergency room", "unexpected", "financial risk"],
+            "explanation": "Successfully links natural conversation pushback to our new Objection Handling records for healthy callers."
         }
     ]
 

@@ -65,6 +65,34 @@ You can toggle between US English, Taglish, and Bahasa Indonesia instantly via t
 
 ---
 
+## 🗄️ Question 2: Production-Ready Knowledge Base Pipeline
+
+Our Knowledge Base (KB) transforms unstructured web data into structured, traceable vectors for the Voice Agent's RAG system.
+
+### How to Add Data & Run the KB Pipeline
+If you want to add custom policies or re-index the database from scratch, simply edit the `knowledge_base/data/raw/curated_content.json` file. Then, run the central orchestrator:
+```bash
+python -m knowledge_base.pipeline
+```
+This automated pipeline instantly executes:
+1. Regex-based PII redaction (masking phone numbers/SSNs) and MD5 hashing deduplication.
+2. Semantic chunking (by logical sections) and schema validation.
+3. High-speed `all-MiniLM-L6-v2` embedding generation and Pinecone Vector UPSERTing.
+
+### KB Schema & Chunking Strategy
+All records adhere to a strict Pydantic schema (`schema.py`):
+- **`record_id`**: Unique identifier (e.g., `kb_product_001`).
+- **`title` & `content`**: The semantic payload.
+- **`category` & `source`**: Taxonomy tags for filtering and traceability (e.g., `healthcare.gov`).
+- **`version` & `pii_flag`**: Tracks document updates and confirms redaction passes.
+
+**Chunking:** We use logical document chunking (by section/product) rather than arbitrary token counts (like LangChain's 500-token splitter). This ensures that the LLM receives the entire context of a specific insurance product in a single coherent chunk, preventing deductibles from being separated from premiums across two different chunks.
+
+### How to Test Retrieval
+We have compiled the 5 required test queries, complete with their retrieved chunks, citations, and accuracy verdicts, in the **[Q2_RETRIEVAL_TESTS.md](Q2_RETRIEVAL_TESTS.md)** file included in this repository.
+
+---
+
 ## 🌎 Question 3: Multilingual Evaluation & Compromises
 
 ### ASR (Speech-to-Text) Behavior
