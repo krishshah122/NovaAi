@@ -27,8 +27,8 @@ graph TD
     Browser <-->|WebRTC Audio| Vapi
     
     %% Vapi Backend integrations
-    Vapi -->|Server URL Webhooks<br/>Tool Calls| FastAPI
-    FastAPI -->|Tool Results<br/>(Query/Submit)| Vapi
+    Vapi -->|"Server URL Webhooks<br/>Tool Calls"| FastAPI
+    FastAPI -->|"Tool Results<br/>(Query/Submit)"| Vapi
 
     %% Database integrations
     FastAPI <-->|Similarity Search| Pinecone
