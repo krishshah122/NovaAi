@@ -5,7 +5,7 @@
 
 ---
 
-## 🔧 Current Status: **Questions 1 & 2 Complete! Ready to Build Question 3 (Native Multilingual Bots — Parts 6 & 7)**
+## 🔧 Current Status: **Questions 1, 2, 3 & 4 Complete! Ready for final documentation (Part 10).**
 
 ---
 
@@ -184,12 +184,16 @@ What was built & verified:
 
 ---
 
-## 🔜 Parts 8 & 9: Real-Time ASR Pipeline & Nudge Intervention Dashboard (NEXT — Question 4)
+## ✅ Part 8 & 9: Real-Time ASR Pipeline & Nudge Intervention Dashboard (DONE — Question 4)
 
-What will be built next:
-- `realtime_pipeline/asr_stream.py` — Real-time audio streaming engine bridging simulated live mic input to Deepgram WebSocket speech recognition.
-- `realtime_pipeline/signal_detector.py` — Conversation signal analytics detecting objection triggers, competitor mentions, emotional strain, and compliance hazards in under 50ms.
-- `realtime_pipeline/nudge_engine.py` — Dynamic agent assistance intervention engine emitting real-time prompt hints to human agents during live calls.
+What was built:
+- `voice_agent/web_caller.html` — Updated to capture Vapi's real-time ASR `transcript` events and forward them to the backend, rendering a Live Dashboard UI.
+- `voice_agent/nudge_engine.py` — The core logic. Feeds the sliding window transcript buffer to a sub-second LLM (`llama-3.3-70b-versatile` via Groq) to semantically detect signals without hardcoded regex.
+- **Nudge Signals**:
+  1. `frustration`: Detects user annoyance or price complaints (e.g. "too expensive").
+  2. `cross_sell`: Detects family/vehicle mentions to prompt multi-plan bundles.
+  3. `compliance`: Detects requests for medical/legal advice or human escalation.
+- **Latency & Suppression**: Tracks end-to-end processing time (typically ~500ms) and caches nudges to prevent duplicate spam within a 30-second cooldown window.
 
 ---
 
@@ -204,6 +208,6 @@ What will be built next:
 | **Part 5** | Vapi assistant setup + qualification flow (Q1) | ✅ Done |
 | **Part 6** | Philippines Taglish bot (Q3) | ✅ Done |
 | **Part 7** | Indonesia Bahasa bot (Q3) | ✅ Done |
-| **Part 8** | Real-time ASR pipeline + signal detector (Q4) | ⏳ Next |
-| **Part 9** | Nudge engine + WebSocket dashboard (Q4) | ⏳ Next |
+| **Part 8** | Real-time ASR pipeline + signal detector (Q4) | ✅ Done |
+| **Part 9** | Nudge engine + WebSocket dashboard (Q4) | ✅ Done |
 | **Part 10** | Documentation, README, architecture diagram | ⬜ Pending |

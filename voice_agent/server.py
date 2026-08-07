@@ -7,12 +7,16 @@ Question 2 vector database and enterprise Mock CRM lead storage with sub-200ms p
 import sys
 import json
 
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pathlib import Path
 from typing import Dict, Any, List
+from pydantic import BaseModel
 
 # Ensure project root in path
 project_root = Path(__file__).resolve().parents[1]
@@ -137,6 +141,20 @@ async def switch_assistant_region(region: str = "us"):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+
+class NudgeRequest(BaseModel):
+    session_id: str
+    transcript_buffer: list
+
+@app.post("/api/analyze_transcript", tags=["Nudge Engine"])
+async def analyze_transcript(req: NudgeRequest):
+    """Real-Time Nudge Engine: Analyze streaming transcript chunks and return actionable signals."""
+    from voice_agent.nudge_engine import generate_nudge
+    try:
+        result = generate_nudge(req.session_id, req.transcript_buffer)
+        return result
+    except Exception as e:
+        return {"nudge": None, "error": str(e), "latency_ms": 0}
 
 @app.get("/", tags=["Health"])
 async def root_status():

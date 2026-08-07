@@ -243,6 +243,59 @@
             border-color: #818cf8;
             box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
         }
+
+        /* Nudge Dashboard Styles */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .nudge-panel {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .nudge-card {
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .nudge-card.compliance { border-left-color: #ef4444; }
+        .nudge-card.cross_sell { border-left-color: #10b981; }
+
+        .nudge-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nudge-msg {
+            font-size: 0.95rem;
+            color: #f8fafc;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -270,9 +323,21 @@
         </button>
     </div>
 
-    <div class="section-title">🎙️ Real-Time Call Transcript</div>
-    <div class="transcript-box" id="transcriptContainer">
-        <div class="bubble system">Conversation transcript will stream live as you speak...</div>
+    <div class="dashboard-container">
+        <div>
+            <div class="section-title">🎙️ Real-Time Call Transcript</div>
+            <div class="transcript-box" id="transcriptContainer">
+                <div class="bubble system">Conversation transcript will stream live as you speak...</div>
+            </div>
+        </div>
+        <div>
+            <div class="section-title">⚡ Live Agent Assist Nudges</div>
+            <div class="nudge-panel" id="nudgeContainer">
+                <div style="color: #64748b; font-size: 0.9rem; text-align: center; margin-top: 2rem;">
+                    Awaiting signals...<br>Nudges will appear here in real-time.
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="section-title">⚡ System Webhook & SDK Logs</div>
@@ -289,6 +354,10 @@
     let vapiInstance = null;
     let isCallActive = false;
     let hasTranscriptStarted = false;
+    
+    // Nudge Engine State
+    let session_id = "sess_" + Math.random().toString(36).substr(2, 9);
+    let transcriptBuffer = [];
 
     const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
@@ -331,6 +400,14 @@
                 statusText.innerText = "System Ready (Offline switcher)";
             }
         });
+    });
+
+    // Auto-sync Vapi Cloud Assistant with active UI tab on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        const activeBtn = document.querySelector('.btn-region.active');
+        if (activeBtn) {
+            setTimeout(() => activeBtn.click(), 500); // slight delay to let UI load
+        }
     });
 
     function addTranscript(sender, text) {
@@ -402,6 +479,18 @@
                 if (message.type === 'transcript' && message.transcriptType === 'final') {
                     const role = message.role === 'user' ? 'user' : 'assistant';
                     addTranscript(role, message.transcript);
+                    
+                    // Push to local buffer and trigger Nudge Engine
+                    transcriptBuffer.push({ role: role, content: message.transcript });
+                    if (transcriptBuffer.length > 10) transcriptBuffer.shift();
+                    
+                    analyzeLiveTranscript();
+                } else if (message.type === 'function-call') {
+                    log(`🛠️ <span style="color: #f59e0b">AI is calling database tool: <b>${message.functionCall.name}</b></span>`);
+                } else if (message.type === 'tool-calls') {
+                    message.toolCalls.forEach(tc => {
+                        log(`🛠️ <span style="color: #f59e0b">AI is calling database tool: <b>${tc.function.name}</b></span>`);
+                    });
                 }
             });
 
@@ -439,6 +528,60 @@
         statusText.innerText = "System Ready (Disconnected)";
         callButton.className = "btn-call";
         callButton.innerHTML = "<span>📞 Call Darwix Advisor</span>";
+        session_id = "sess_" + Math.random().toString(36).substr(2, 9);
+        transcriptBuffer = [];
+    }
+    
+    // --- Nudge Engine Integration ---
+    let isAnalyzing = false;
+    async function analyzeLiveTranscript() {
+        if (isAnalyzing || transcriptBuffer.length === 0) return;
+        isAnalyzing = true;
+        
+        try {
+            const res = await fetch('/api/analyze_transcript', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: session_id,
+                    transcript_buffer: transcriptBuffer
+                })
+            });
+            const data = await res.json();
+            
+            if (data.nudge && data.nudge.type && data.nudge.type !== 'none') {
+                displayNudge(data.nudge, data.latency_ms);
+            }
+        } catch (e) {
+            console.error("Nudge Engine Error:", e);
+        } finally {
+            isAnalyzing = false;
+        }
+    }
+    
+    function displayNudge(nudge, latency_ms) {
+        const container = document.getElementById('nudgeContainer');
+        
+        // Clear placeholder if first nudge
+        if (container.innerHTML.includes("Awaiting signals")) {
+            container.innerHTML = "";
+        }
+        
+        const card = document.createElement('div');
+        card.className = `nudge-card ${nudge.type}`;
+        
+        const typeLabel = nudge.type.replace('_', ' ').toUpperCase();
+        const icon = nudge.type === 'frustration' ? '⚠️' : nudge.type === 'compliance' ? '🚨' : '💡';
+        
+        card.innerHTML = `
+            <div class="nudge-header">
+                <span>${icon} ${typeLabel}</span>
+                <span>${latency_ms}ms</span>
+            </div>
+            <div class="nudge-msg">${nudge.message}</div>
+        `;
+        
+        container.prepend(card);
     }
 </script>
 </body>
