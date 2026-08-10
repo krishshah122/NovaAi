@@ -173,9 +173,8 @@ class HybridRetriever:
             return []
 
         # 1. Generate dense vector embedding for query question
-        query_vector = self.embedder.model.encode(
-            [request.question], show_progress_bar=False, normalize_embeddings=True
-        )[0].tolist()
+        vectors_generator = self.embedder.model.embed([request.question])
+        query_vector = next(vectors_generator).tolist()
 
         matches_data = []
         category_filter_str = request.category_filter.value if request.category_filter else None

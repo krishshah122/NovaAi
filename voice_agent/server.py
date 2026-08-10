@@ -42,20 +42,13 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    import threading
-    import gc
-    def load_model_in_background():
-        try:
-            print("[SYSTEM] Background thread: Loading AI embedding models into RAM...")
-            from voice_agent.rag_tool import get_retriever
-            get_retriever().embedder._load_model()
-            gc.collect()  # Force garbage collection to free up memory spikes
-            print("[SYSTEM] AI Models successfully loaded in background.")
-        except Exception as e:
-            print(f"[SYSTEM ERROR] Background model load failed: {e}")
-            
-    # Start the heavy model load in a background thread so it doesn't block Uvicorn startup
-    threading.Thread(target=load_model_in_background, daemon=True).start()
+    print("[SYSTEM] Pre-loading lightweight fastembed ONNX models into RAM...")
+    from voice_agent.rag_tool import get_retriever
+    try:
+        get_retriever().embedder._load_model()
+        print("[SYSTEM] AI Models successfully pre-loaded and ready for instant retrieval.")
+    except Exception as e:
+        print(f"[SYSTEM ERROR] Failed to pre-load AI models: {e}")
 
 
 @app.get("/call", response_class=HTMLResponse, tags=["UI"])

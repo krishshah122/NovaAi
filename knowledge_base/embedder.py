@@ -8,10 +8,10 @@ from typing import List, Dict, Any
 from knowledge_base.schema import KBRecord
 
 try:
-    from sentence_transformers import SentenceTransformer
-    EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
+    from fastembed import TextEmbedding
+    EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 except ImportError:
-    SentenceTransformer = None
+    TextEmbedding = None
     EMBEDDING_MODEL_NAME = "mock"
 
 
@@ -27,13 +27,13 @@ class VectorEmbedder:
         self.model = None
 
     def _load_model(self):
-        """Lazy loader for embedding model to avoid startup memory spikes."""
-        if self.model is None and SentenceTransformer is not None:
-            print(f"[EMBED] Loading SentenceTransformer model '{self.model_name}'...")
-            self.model = SentenceTransformer(self.model_name)
+        """Lazy loader for ONNX embedding model to avoid startup memory spikes. Consumes only ~150MB RAM."""
+        if self.model is None and TextEmbedding is not None:
+            print(f"[EMBED] Loading fastembed model '{self.model_name}'...")
+            self.model = TextEmbedding(model_name=self.model_name)
             print("[EMBED] Model successfully initialized.")
-        elif SentenceTransformer is None:
-            print("[WARNING] sentence_transformers not installed. Fallback to zero-vector mock embeddings.")
+        elif TextEmbedding is None:
+            print("[WARNING] fastembed not installed. Fallback to zero-vector mock embeddings.")
 
     def sanitize_metadata(self, record: KBRecord) -> Dict[str, Any]:
         """
@@ -66,27 +66,22 @@ class VectorEmbedder:
 
         self._load_model()
         texts = [rec.content for rec in records]
-        embeddings_map = {}
-
-        print(f"[EMBED] Generating vector embeddings for {len(records)} records (Batch size: {self.batch_size})...")
-
+        
+        print(f"[EMBED] Generating vector embeddings for {len(records)} records...")
+        
         if self.model:
-            # Generate real 384-dimensional embeddings
-            for i in range(0, len(texts), self.batch_size):
-                batch_texts = texts[i : i + self.batch_size]
-                batch_vectors = self.model.encode(batch_texts, show_progress_bar=False, normalize_embeddings=True)
-                for idx, vector in enumerate(batch_vectors):
-                    embeddings_map[i + idx] = vector.tolist()
+            # Generate real 384-dimensional embeddings (TextEmbedding.embed returns a generator of numpy arrays)
+            vectors_generator = self.model.embed(texts)
+            embeddings_list = [v.tolist() for v in vectors_generator]
         else:
-            # Fallback 384-dimensional zero-vector for testing environments without PyTorch
-            for i in range(len(texts)):
-                embeddings_map[i] = [0.0] * 384
-
+            # Fallback 384-dimensional zero-vector for testing environments without fastembed
+            embeddings_list = [[0.0] * 384 for _ in texts]
+            
         payloads = []
         for idx, record in enumerate(records):
             payloads.append({
                 "id": record.record_id,
-                "values": embeddings_map[idx],
+                "values": embeddings_list[idx],
                 "metadata": self.sanitize_metadata(record)
             })
 

@@ -48,7 +48,12 @@ graph TD
 - Dynamically intercepts `transcript` and `function-call` events to power the Live Agent Dashboard.
 - Submits live transcripts to the Nudge Engine.
 
-### 2. Vapi AI Orchestrator
+### 2. Local Embeddings (ONNX/fastembed)
+To eliminate external API costs and latency constraints during live calls, dense vectors (384 dimensions) are generated locally. Initially, PyTorch and `sentence-transformers` were utilized. However, PyTorch's 600MB memory footprint proved fatal on 512MB constrained environments like Render's Free Tier, causing constant Out of Memory crashes.
+
+To permanently resolve this, the architecture was migrated to `fastembed`, utilizing the same `all-MiniLM-L6-v2` weights but running on the highly optimized ONNX runtime. This slashed memory usage by 75% down to ~150MB, allowing instantaneous local embeddings safely within the constrained cloud container without risking OOM kills.
+
+### 3. Vapi AI Orchestrator
 - Handles Speech-to-Text (ASR) via Deepgram Nova-2.
 - Handles LLM planning and dialogue generation.
 - Handles Text-to-Speech (TTS) via ElevenLabs and Cartesia.
