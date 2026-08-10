@@ -75,5 +75,27 @@
     "consultation_notes": "Caller asked about Darwich-like quantum shield plan, which is not in current health insurance policy guidelines. Needs human escalation.",
     "status": "REQUIRES_HUMAN_ESCALATION",
     "assigned_agent": "Human Onboarding Specialist"
+  },
+  {
+    "lead_id": "lead_2271f07f",
+    "timestamp": "2026-08-07T03:39:52.575425",
+    "caller_name": "Krish",
+    "contact_info": "Not Provided",
+    "household_size": 1,
+    "interested_plan_type": "Bronze",
+    "consultation_notes": "Household size: 2 (self and wife). Prefers phone contact. Interested in Bronze plan for affordable premiums.",
+    "status": "QUALIFIED_LEAD",
+    "assigned_agent": "Automated Nudge System"
+  },
+  {
+    "lead_id": "lead_dff30781",
+    "timestamp": "2026-08-07T06:34:42.786259",
+    "caller_name": "Anonymous Caller",
+    "contact_info": "Not Provided",
+    "household_size": 1,
+    "interested_plan_type": "Undetermined",
+    "consultation_notes": "Standard voice consultation",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
   }
 ]

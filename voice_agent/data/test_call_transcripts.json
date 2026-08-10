@@ -5,8 +5,8 @@
     "caller_persona": "Anita Desai (Family of 3, seeking balanced cost plan)",
     "transcript": [
       {
-        "speaker": "Darwix Advisor",
-        "text": "Hello! Thank you for calling our Health Insurance Advisory center. My name is Darwix Advisor. How can I assist you with your health coverage today?"
+        "speaker": "Nova Advisor",
+        "text": "Hello! Thank you for calling our Health Insurance Advisory center. My name is Nova Advisor. How can I assist you with your health coverage today?"
       },
       {
         "speaker": "Caller (Anita)",
@@ -18,7 +18,7 @@
         "query": "What are the deductibles and coverage cost differences between Bronze and Silver health plans?"
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "A Bronze plan offers the lowest monthly premiums, but covers about 60% of care costs on average, making it ideal for catastrophic emergency protection. A Silver plan has slightly higher premiums but covers around 70% with significantly lower out-of-pocket deductibles when visiting doctors. May I note down your phone number and target plan to capture your consultation details?"
       },
       {
@@ -38,7 +38,7 @@
         }
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "Wonderful! I have recorded your qualified profile under our advisory system. A licensed enrollment coordinator will connect with you shortly. Have a great day!"
       }
     ],
@@ -50,8 +50,8 @@
     "caller_persona": "Rahul K. (24-year-old software developer, skeptical of insurance costs)",
     "transcript": [
       {
-        "speaker": "Darwix Advisor",
-        "text": "Hello! Thank you for calling our Health Insurance Advisory center. My name is Darwix Advisor. How can I assist you today?"
+        "speaker": "Nova Advisor",
+        "text": "Hello! Thank you for calling our Health Insurance Advisory center. My name is Nova Advisor. How can I assist you today?"
       },
       {
         "speaker": "Caller (Rahul)",
@@ -63,7 +63,7 @@
         "query": "Why should I bother paying for health insurance if I am young and healthy and never visit the hospital?"
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "I completely understand where you are coming from! Even for young, healthy adults, health insurance is essential financial protection against unforeseen accidents or sudden severe emergencies that can result in crippling medical bills. Plus, all our marketplace plans completely cover preventative physical screenings at zero copay to keep you healthy without extra costs."
       },
       {
@@ -83,7 +83,7 @@
         }
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "Glad I could shed some light on that for you! Our low-cost Bronze plans are perfect for peace of mind against worst-case scenarios. Feel free to call us back whenever you are ready to enroll!"
       }
     ],
@@ -95,8 +95,8 @@
     "caller_persona": "Pooja S. (Confused about enrollment periods)",
     "transcript": [
       {
-        "speaker": "Darwix Advisor",
-        "text": "Hello! Welcome to Darwix Advisory. How can I guide your health coverage decisions today?"
+        "speaker": "Nova Advisor",
+        "text": "Hello! Welcome to Nova Advisory. How can I guide your health coverage decisions today?"
       },
       {
         "speaker": "Caller (Pooja)",
@@ -108,7 +108,7 @@
         "query": "Can anyone sign up anytime outside Open Enrollment, and what are Medicaid income rules?"
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "Actually, under standard marketplace laws, outside of the annual Open Enrollment window you can only purchase a plan if you qualify for a Special Enrollment Period through a major life event—like getting married, moving to a new ZIP code, or losing existing job coverage. Additionally, Medicaid eligibility is strictly determined by verified household income thresholds rather than being universally open to everyone."
       },
       {
@@ -128,7 +128,7 @@
         }
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "Congratulations on your marriage! Because you got married within the last 60 days, you officially qualify for a Special Enrollment Period right now. I have logged your qualification file for immediate onboarding."
       }
     ],
@@ -140,8 +140,8 @@
     "caller_persona": "Vikram V. (Asking unmonitored investment/financial advice)",
     "transcript": [
       {
-        "speaker": "Darwix Advisor",
-        "text": "Hello! Thank you for calling Darwix Health Insurance Advisory. How can I help you today?"
+        "speaker": "Nova Advisor",
+        "text": "Hello! Thank you for calling Nova Health Insurance Advisory. How can I help you today?"
       },
       {
         "speaker": "Caller (Vikram)",
@@ -153,7 +153,7 @@
         "query": "pharmaceutical stock share guarantee tax exemption double money profit"
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "I do not have exact details on stock investments or guaranteed financial returns in our current health policy guidelines. Because we strictly follow verified advisory regulations, I cannot invent or guess advice on investment markets. To ensure you receive professional guidance on health insurance tax benefits, let me connect you with a licensed specialist."
       },
       {
@@ -177,8 +177,8 @@
     "caller_persona": "Dr. Suresh M. (Frustrated over complex medical surgery claim dispute)",
     "transcript": [
       {
-        "speaker": "Darwix Advisor",
-        "text": "Hello! Thank you for calling Darwix Health Insurance Advisory. My name is Darwix Advisor. How can I assist you today?"
+        "speaker": "Nova Advisor",
+        "text": "Hello! Thank you for calling Nova Health Insurance Advisory. My name is Nova Advisor. How can I assist you today?"
       },
       {
         "speaker": "Caller (Dr. Suresh)",
@@ -197,7 +197,7 @@
         }
       },
       {
-        "speaker": "Darwix Advisor",
+        "speaker": "Nova Advisor",
         "text": "I completely understand how critical and urgent this medical situation is for your father, Dr. Suresh. I have immediately raised an emergency high-priority escalation ticket with our team, and I am transferring your call directly to our senior licensed onboarding supervisor right now. Please stay on the line."
       }
     ],

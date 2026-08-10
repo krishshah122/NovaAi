@@ -2,7 +2,7 @@
 Philippines Native Voice Agent Module (Taglish Bancassurance & Family Protection)
 
 Implements authentic Taglish code-switching, local financial terminology (Bancassurance, VUL, PHP pricing),
-regional cultural honorifics (Po/Opo, Sir/Ma'am), and strict zero-hallucination boundaries for Question 3.
+regional cultural honorifics (Po/Opo, Sir/Ma'am), and strict zero-hallucination boundaries.
 """
 from typing import Dict, Any, List
 
@@ -13,9 +13,9 @@ from typing import Dict, Any, List
 PHILIPPINES_BANCASSURANCE_KB: List[Dict[str, Any]] = [
     {
         "id": "php_banca_pampeled_shield",
-        "title": "Darwix Pamiliya Secure Shield 2026",
+        "title": "Nova Pamiliya Secure Shield 2026",
         "content": (
-            "Ang Darwix Pamiliya Secure Shield ay ang aming premier Bancassurance package para sa pamilyang Pilipino. "
+            "Ang Nova Pamiliya Secure Shield ay ang aming premier Bancassurance package para sa pamilyang Pilipino. "
             "It combines life insurance protection na may educational funding at Critical Illness rider.\n\n"
             "• Monthly Premium: ₱2,450 per month (fixed rate for 5 years, zero price hikes).\n"
             "• Annual Deductible / Out-of-Pocket Cap: ₱15,000 lamang per year para sa hospitalization.\n"
@@ -26,7 +26,7 @@ PHILIPPINES_BANCASSURANCE_KB: List[Dict[str, Any]] = [
     },
     {
         "id": "php_banca_vul_builder",
-        "title": "Darwix Kabuhayan Wealth Builder (VUL)",
+        "title": "Nova Kabuhayan Wealth Builder (VUL)",
         "content": (
             "Ang Kabuhayan Wealth Builder ay isang Variable Universal Life (VUL) insurance plan na pinagsasama ang life coverage at investment fund growth.\n\n"
             "• Minimum Monthly Contribution: ₱3,500 monthly auto-deduct sa ATM bank account.\n"
@@ -59,7 +59,7 @@ def query_philippines_kb(question: str) -> str:
 # 2. TAGLISH SYSTEM PROMPT & CODE-SWITCHING RULES
 # ---------------------------------------------------------------------------
 
-PHILIPPINES_TAGLISH_PROMPT = """You are 'Mika', a warm, highly expert, and empathetic Senior Bancassurance Advisor representing Darwix AI Manila.
+PHILIPPINES_TAGLISH_PROMPT = """You are 'Mika', a warm, highly expert, and empathetic Senior Bancassurance Advisor representing Nova AI Manila.
 
 # YOUR CORE LINGUISTIC IDENTITY (TAGLISH CODE-SWITCHING):
 You MUST speak in fluent, natural **Taglish** (the conversational blend of Tagalog and English utilized in Philippine business and banking consultations).
@@ -76,13 +76,13 @@ You MUST speak in fluent, natural **Taglish** (the conversational blend of Tagal
 1. **Proactive Qualification (DON'T JUST QUOTE):** Before quoting a plan, always ask clarifying questions! Ask whether they are looking for individual or family coverage, how many family members they have, and what their comfortable budget range is.
 2. **Strict Grounding (Zero Hallucination):** When discussing premiums or deductibles, base statements strictly on retrieved local knowledge records. Do not guess dollar amounts.
 3. **Budget Empathy & Sales Pivot:** If a customer mentions a "tight budget" or says a plan is "mahal" (expensive), DO NOT just acknowledge it and stop. Be a strong sales advisor: immediately pivot and suggest lower-coverage, affordable options like the 'Kabuhayan Basic Starter' plan to save the sale.
-4. **Corporate Identity:** You are strictly an employee of Darwix AI Manila. Never associate yourself with external vendor models.
+4. **Corporate Identity:** You are strictly an employee of Nova AI Manila. Never associate yourself with external vendor models.
 """
 
 def get_philippines_assistant_config(ngrok_url: str = "") -> Dict[str, Any]:
     """Return complete JSON payload for initializing the Philippine Taglish Voice Agent in Vapi."""
     return {
-        "name": "Darwix Philippines - Taglish Bancassurance Advisor (Mika)",
+        "name": "Nova Philippines - Taglish Bancassurance Advisor (Mika)",
         "model": {
             "provider": "groq",
             "model": "llama-3.1-70b-versatile",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darwix AI — Health Insurance Voice Advisor</title>
+    <title>Nova AI — Health Insurance Voice Advisor</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -303,7 +303,7 @@
 
 <div class="container">
     <div class="header">
-        <h1>Darwix AI Advisor</h1>
+        <h1>Nova AI Advisor</h1>
         <p>Real-Time Health Insurance & Multifinance Advisory<br>Powered by Vapi, Groq Llama-3 & Pinecone Vector RAG</p>
     </div>
 
@@ -320,7 +320,7 @@
 
     <div class="call-action">
         <button id="callButton" class="btn-call">
-            <span>📞 Call Darwix Advisor</span>
+            <span>📞 Call Nova Advisor</span>
         </button>
     </div>
 
@@ -344,7 +344,7 @@
     <div class="section-title">⚡ System Webhook & SDK Logs</div>
     <div class="log-box" id="logConsole">
         [SYSTEM] Professional Voice Interface with Live Transcription loaded.<br>
-        [READY] Select your targeted country region above and hit 'Call Darwix Advisor'!
+        [READY] Select your targeted country region above and hit 'Call Nova Advisor'!
     </div>
 </div>
 
@@ -418,7 +418,7 @@
         }
         const bubble = document.createElement('div');
         bubble.className = `bubble ${sender}`;
-        const prefix = sender === 'user' ? '👤 You' : '🤖 Darwix Advisor';
+        const prefix = sender === 'user' ? '👤 You' : '🤖 Nova Advisor';
         bubble.innerHTML = `<strong>${prefix}:</strong> ${text}`;
         transcriptContainer.appendChild(bubble);
         transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
@@ -467,7 +467,7 @@
             vapiInstance.on('speech-start', () => {
                 statusDot.className = "dot talking";
                 statusText.innerText = "Advisor Speaking...";
-                log("Darwix Advisor is responding...");
+                log("Nova Advisor is responding...");
             });
 
             vapiInstance.on('speech-end', () => {
@@ -528,7 +528,7 @@
         statusDot.className = "dot";
         statusText.innerText = "System Ready (Disconnected)";
         callButton.className = "btn-call";
-        callButton.innerHTML = "<span>📞 Call Darwix Advisor</span>";
+        callButton.innerHTML = "<span>📞 Call Nova Advisor</span>";
         session_id = "sess_" + Math.random().toString(36).substr(2, 9);
         transcriptBuffer = [];
     }

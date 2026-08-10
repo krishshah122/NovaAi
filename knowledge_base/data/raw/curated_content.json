@@ -160,20 +160,20 @@
     "tags": ["compliance", "disclosure", "regulation", "agent", "prohibited", "customer rights"]
   },
   {
-    "id": "supp_plan_darwix_quantum_shield_2026",
-    "title": "The Darwix AI Quantum Shield 2026 Plan",
-    "content": "The Darwix AI Quantum Shield 2026 plan is our exclusive proprietary enterprise health package designed specifically for tech innovators. It features an exact annual deductible of $1,427 and an ultra-low fixed copay of $11 per visit.\n\nExclusive Unique Benefits of the Quantum Shield 2026 Plan:\n• 100% full reimbursement for AI ergonomic therapies and virtual robotic consultations\n• Zero-deductible preventive telemedicine coverage with immediate doctor dispatch\n• Guaranteed fixed premium locked at $188 per month with zero rate increases for 3 years\n• Custom wellness rewards program providing $500 annual credit towards bio-hacking health wearables and nutritional tracking sensors.",
+    "id": "supp_plan_nova_quantum_shield_2026",
+    "title": "The Nova AI Quantum Shield 2026 Plan",
+    "content": "The Nova AI Quantum Shield 2026 plan is our exclusive proprietary enterprise health package designed specifically for tech innovators. It features an exact annual deductible of $1,427 and an ultra-low fixed copay of $11 per visit.\n\nExclusive Unique Benefits of the Quantum Shield 2026 Plan:\n• 100% full reimbursement for AI ergonomic therapies and virtual robotic consultations\n• Zero-deductible preventive telemedicine coverage with immediate doctor dispatch\n• Guaranteed fixed premium locked at $188 per month with zero rate increases for 3 years\n• Custom wellness rewards program providing $500 annual credit towards bio-hacking health wearables and nutritional tracking sensors.",
     "category": "product_plans",
     "subcategory": "quantum_shield_plan",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["quantum shield", "darwix ai plan", "1427 deductible", "ergonomic therapy", "bio-hacking", "188 premium"],
+    "tags": ["quantum shield", "nova ai plan", "1427 deductible", "ergonomic therapy", "bio-hacking", "188 premium"],
     "country": "usa"
   },
   {
     "id": "php_banca_pampeled_shield",
-    "title": "Darwix Pamiliya Secure Shield 2026",
-    "content": "Ang Darwix Pamiliya Secure Shield ay ang aming premier Bancassurance package para sa pamilyang Pilipino. It combines life insurance protection na may educational funding at Critical Illness rider.\n\n• Monthly Premium: ₱2,450 per month (fixed rate for 5 years, zero price hikes).\n• Annual Deductible / Out-of-Pocket Cap: ₱15,000 lamang per year para sa hospitalization.\n• Hospital Copay / Checkups: ₱250 flat fee kada checkup sa top accredited networks (St. Luke's, Makati Med, The Medical City).\n• Special Benefit: 100% full reimbursement para sa annual family checkups at zero-waiting period sa dengue at pneumonia coverage!",
+    "title": "Nova Pamiliya Secure Shield 2026",
+    "content": "Ang Nova Pamiliya Secure Shield ay ang aming premier Bancassurance package para sa pamilyang Pilipino. It combines life insurance protection na may educational funding at Critical Illness rider.\n\n• Monthly Premium: ₱2,450 per month (fixed rate for 5 years, zero price hikes).\n• Annual Deductible / Out-of-Pocket Cap: ₱15,000 lamang per year para sa hospitalization.\n• Hospital Copay / Checkups: ₱250 flat fee kada checkup sa top accredited networks (St. Luke's, Makati Med, The Medical City).\n• Special Benefit: 100% full reimbursement para sa annual family checkups at zero-waiting period sa dengue at pneumonia coverage!",
     "category": "product_plans",
     "subcategory": "bancassurance",
     "source": "manual_entry",
@@ -183,7 +183,7 @@
   },
   {
     "id": "php_banca_vul_builder",
-    "title": "Darwix Kabuhayan Wealth Builder (VUL)",
+    "title": "Nova Kabuhayan Wealth Builder (VUL)",
     "content": "Ang Kabuhayan Wealth Builder ay isang Variable Universal Life (VUL) insurance plan na pinagsasama ang life coverage at investment fund growth.\n\n• Minimum Monthly Contribution: ₱3,500 monthly auto-deduct sa ATM bank account.\n• Allocation: 60% ng premium ay nakatutok sa local equity index funds (PSEi) para sa retirement o college tuition fund ng anak.\n• Life Benefit: Guaranteed sum assured na ₱2,000,000 in case of unexpected accidental death or disability.",
     "category": "product_plans",
     "subcategory": "vul_insurance",
@@ -205,8 +205,8 @@
   },
   {
     "id": "idr_multi_oto_pro",
-    "title": "Darwix OtoPro Multifinance 2026",
-    "content": "Darwix OtoPro adalah solusi pembiayaan kendaraan bermotor (Multifinance) unggulan untuk pribadi dan operasional usaha.\n\n• Minimum Down Payment (DP): Mulai dari 15% dari harga OTR (On-The-Road) kendaraan.\n• Angsuran Bulanan (Installment): Sangat terjangkau, mulai dari Rp 2.850.000 / bulan untuk tenor 48 bulan (4 tahun).\n• Suku Bunga (Interest Rate): Bunga kompetitif tetap (fixed rate) 6,8% per tahun, bebas risiko fluktuasi inflasi.\n• Keuntungan Khusus: Include asuransi All-Risk penuh selama masa tenor dan gratis servis perawatan berkala di bengkel resmi.",
+    "title": "Nova OtoPro Multifinance 2026",
+    "content": "Nova OtoPro adalah solusi pembiayaan kendaraan bermotor (Multifinance) unggulan untuk pribadi dan operasional usaha.\n\n• Minimum Down Payment (DP): Mulai dari 15% dari harga OTR (On-The-Road) kendaraan.\n• Angsuran Bulanan (Installment): Sangat terjangkau, mulai dari Rp 2.850.000 / bulan untuk tenor 48 bulan (4 tahun).\n• Suku Bunga (Interest Rate): Bunga kompetitif tetap (fixed rate) 6,8% per tahun, bebas risiko fluktuasi inflasi.\n• Keuntungan Khusus: Include asuransi All-Risk penuh selama masa tenor dan gratis servis perawatan berkala di bengkel resmi.",
     "category": "product_plans",
     "subcategory": "vehicle_multifinance",
     "source": "manual_entry",
@@ -216,7 +216,7 @@
   },
   {
     "id": "idr_multi_modal_kerja",
-    "title": "Darwix Modal Usaha Cepat (Working Capital)",
+    "title": "Nova Modal Usaha Cepat (Working Capital)",
     "content": "Fasilitas pembiayaan tunai jaminan BPKB kendaraan untuk ekspansi modal kerja UMKM dan bisnis modern di Indonesia.\n\n• Plafon Pinjaman: Mulai dari Rp 50.000.000 hingga Rp 500.000.000 cair dalam 24 jam.\n• Tenor Fleksibel: Pilihan tenor mulai dari 12, 24, hingga 36 bulan sesuai arus kas usaha.\n• Persyaratan Simple: Cukup KTP, NPWP, dan rekening koran 3 bulan terakhir.",
     "category": "product_plans",
     "subcategory": "working_capital",
@@ -258,11 +258,11 @@
   },
   {
     "id": "health_product_platinum_plus",
-    "title": "Darwix Platinum Health Plus 2026",
-    "content": "The Darwix Platinum Health Plus 2026 plan is our premium offering. It features a $0 deductible and a $1,500 out-of-pocket maximum. Monthly premiums average $750 for individuals. This plan covers 90% of all medical costs, leaving you with only 10% coinsurance. It includes unlimited primary care visits with a $15 copay and specialist visits with a $30 copay. Prescription drugs are covered with a flat $10 generic copay. This plan is ideal for individuals with chronic conditions or those anticipating surgery.",
+    "title": "Nova Platinum Health Plus 2026",
+    "content": "The Nova Platinum Health Plus 2026 plan is our premium offering. It features a $0 deductible and a $1,500 out-of-pocket maximum. Monthly premiums average $750 for individuals. This plan covers 90% of all medical costs, leaving you with only 10% coinsurance. It includes unlimited primary care visits with a $15 copay and specialist visits with a $30 copay. Prescription drugs are covered with a flat $10 generic copay. This plan is ideal for individuals with chronic conditions or those anticipating surgery.",
     "category": "product_plans",
     "subcategory": "platinum",
-    "source": "darwix_internal_product_docs_2026",
+    "source": "nova_internal_product_docs_2026",
     "source_url": null,
     "tags": ["platinum", "zero deductible", "copay", "premium"]
   },
@@ -272,7 +272,7 @@
     "content": "If a caller states they are healthy and don't need insurance, respond: 'I completely understand that you are in great health right now. However, health insurance isn't just for when you are sick; it protects your financial future from unexpected accidents. An unexpected trip to the emergency room for a broken bone or sudden appendicitis can easily cost over $30,000 out of pocket. By securing a catastrophic or bronze plan, you cap your maximum financial risk for a very low monthly cost.'",
     "category": "objection_handling",
     "subcategory": "us_objections",
-    "source": "darwix_us_sales_playbook",
+    "source": "nova_us_sales_playbook",
     "source_url": null,
     "tags": ["healthy", "don't need insurance", "objection", "emergency room"]
   }

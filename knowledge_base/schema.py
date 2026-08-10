@@ -40,7 +40,7 @@ class KBRecord(BaseModel):
     """
     Single knowledge base record.
     
-    Schema matches the assessment requirement:
+    Schema fields:
     record_id, title, content, category, source, version, pii_flag
     """
     record_id: str = Field(
@@ -155,7 +155,7 @@ class KBQueryRequest(BaseModel):
 
 
 class RetrievalTestResult(BaseModel):
-    """Result of a retrieval test for assessment evidence."""
+    """Result of a retrieval test for evaluation evidence."""
     query: str
     retrieved_records: List[KBQueryResult]
     source_reference: str

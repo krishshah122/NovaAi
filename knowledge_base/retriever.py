@@ -231,7 +231,7 @@ class HybridRetriever:
     def format_context_for_rag(self, results: List[KBQueryResult]) -> str:
         """
         Format retrieved passages into a strictly structured prompt block
-        for Question 1 voice agent LLM (Groq/Llama-3) consumption.
+        for voice agent LLM (Groq/Llama-3) consumption.
         """
         if not results:
             return "NO RELEVANT POLICY DOCUMENTATION FOUND. INSTRUCT AGENT TO OFFER SPECIALIST TRANSFER."

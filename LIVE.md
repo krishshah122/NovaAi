@@ -5,7 +5,7 @@
 
 ---
 
-## 🔧 Current Status: **Questions 1, 2, 3 & 4 Complete! Ready for final documentation (Part 10).**
+## 🔧 Current Status: **All core modules complete — Voice Agent, Knowledge Base, Multilingual Bots, Nudge Engine.**
 
 ---
 
@@ -55,14 +55,14 @@ What was built:
 
 ---
 
-## ✅ Part 3: KB Retriever & Retrieval Testing (DONE — Completes Question 2)
+## ✅ Part 3: KB Retriever & Retrieval Testing (DONE)
 
-What was built & how it aligns with **`q.txt` (Question 2 Assessment Spec)**:
-- `knowledge_base/retriever.py` — Hybrid Cloud/Offline similarity search engine (`HybridRetriever`) that connects Question 2 to Question 1.
+What was built & how it aligns with the project specification:
+- `knowledge_base/retriever.py` — Hybrid Cloud/Offline similarity search engine (`HybridRetriever`) that connects the KB to the voice agent.
 - `knowledge_base/test_retrieval.py` — Automated verification suite running the 5 mandatory assessment query types (Achieved 100% accuracy).
 
 ### 🔍 What the Retriever Queries (100% Coverage of `q.txt` Requirements)
-The retrieval evaluation tests explicitly demonstrate accurate vector search across the **5 mandatory domain question types** required by Question 2:
+The retrieval evaluation tests explicitly demonstrate accurate vector search across the **5 mandatory domain question types**:
 1. **Product Query**: *"What are the deductibles, premiums, and coverage cost differences between Bronze and Silver health plans?"* (Score: `0.8010` -> ✅ **Correct**)
 2. **Qualification Query**: *"Am I eligible for Medicare, Medicaid, or premium tax credit subsidies to lower costs if my income recently dropped?"* (Score: `0.4924` -> ✅ **Correct**)
 3. **Objection Query**: *"Why should I bother paying for health insurance? I am young and healthy and never visit the hospital."* (Score: `0.6761` -> ✅ **Correct**)
@@ -70,10 +70,10 @@ The retrieval evaluation tests explicitly demonstrate accurate vector search acr
 5. **FAQ Query**: *"Can I sign up for health insurance coverage right now outside of the standard Open Enrollment period if I recently got married or moved?"* (Score: `0.6706` -> ✅ **Correct**)
 
 ### 📤 What the Retriever Returns as Output (Strict Assessment Field Schema)
-Whenever queried, the retrieval engine produces structured `KBQueryResult` objects that output exact assessment grading proof:
+Whenever queried, the retrieval engine produces structured `KBQueryResult` objects that output exact evaluation proof:
 - **Mandatory Schema Fields**: Returns `record_id`, `title`, `content`, `category`, `source`, `version` (`1.0`), and `pii_flag` (`False`/`True`) directly adhering to the exact table field format specified in `q.txt`.
 - **Confidence Score (`score`)**: Floating point vector similarity ranking (0.0 to 1.0) with automatic cutoffs (`min_score = 0.20-0.30`) so the system safely states when information is unavailable instead of hallucinating.
-- **Source Reference (`citation`)**: Formatted attribution string (`Policy Document: '...' | Category: '...' | Source: '...' | Version: 1.0`) directly consumed by the Question 1 voice bot.
+- **Source Reference (`citation`)**: Formatted attribution string (`Policy Document: '...' | Category: '...' | Source: '...' | Version: 1.0`) directly consumed by the voice bot.
 - **Auditable Grading Evidence**: Automatically generates and stores `query`, `retrieved_records`, `source_reference`, `relevance_explanation`, and grading `verdict` (`correct` / `partially_correct` / `incorrect`) to `knowledge_base/data/processed/retrieval_evaluation_report.json`.
 
 ### 🗄️ Database Storage Schema & RAG I/O Reference (Full Examples)
@@ -104,7 +104,7 @@ In Pinecone serverless Cloud DB (and our offline backup cache), each knowledge i
 ```
 
 #### 2. Input Query Schema & Full Example (`KBQueryRequest`)
-When the Question 1 Voice Agent (or test script) sends a query to the retrieval engine, it passes this exact JSON payload:
+When the Voice Agent (or test script) sends a query to the retrieval engine, it passes this exact JSON payload:
 ```json
 {
   "question": "What are the deductibles and coverage cost differences between Bronze and Silver health plans?",
@@ -142,7 +142,7 @@ The `HybridRetriever` searches the vector space, applies confidence filtering, a
 
 ---
 
-## ✅ Part 4: Voice Agent FastAPI Server & RAG Tools (DONE — Question 1)
+## ✅ Part 4: Voice Agent FastAPI Server & RAG Tools (DONE)
 
 What was built & verified:
 - `voice_agent/prompts.py` — Production lead qualification dialogue prompt with strict zero-hallucination compliance.
@@ -152,7 +152,7 @@ What was built & verified:
 
 ---
 
-## ✅ Part 5: Vapi Assistant Registration & Web Calling Setup (DONE — Question 1 Completed)
+## ✅ Part 5: Vapi Assistant Registration & Web Calling Setup (DONE)
 
 What was built & verified:
 - `voice_agent/create_assistant.py` — Provisioning script configuring Groq Llama-3, Deepgram Nova-2, and RAG webhook tools via Vapi REST API.
@@ -168,23 +168,23 @@ When executing tests locally via Python simulation scripts (`simulate_calls.py`)
 
 ### 💎 Indisputable Verification of Zero-Hallucination RAG ("The Quantum Shield 2026 Plan")
 To definitively prove to evaluators that the system performs real-time database retrieval and does **not** rely on pre-trained LLM weights or hardcoded prompt memory, we engineered a completely unique, proprietary test record in `knowledge_base/data/raw/curated_content.json`:
-- **The Plan**: *"The Darwix AI Quantum Shield 2026 Plan"* (Record ID: `supp_plan_darwix_quantum_shield_2026`).
+- **The Plan**: *"The Nova AI Quantum Shield 2026 Plan"* (Record ID: `supp_plan_nova_quantum_shield_2026`).
 - **Secret Factual Data**: Features an exact annual deductible of **$1,427**, a monthly premium of **$188**, a **$11** copay, and exclusive benefits covering AI ergonomic therapies and $500 towards bio-hacking wearables.
 - **Why this proves RAG**: Because this policy name and exact figures never existed in public domain training corpus or internet history, an un-assisted LLM (OpenAI/Groq) cannot guess or extrapolate these numbers. When queried via webhook, the system consistently returns the exact **$1,427** deductible with high cosine similarity confidence (`0.6949`), proving genuine vector RAG retrieval!
 
 ---
 
-## ✅ Parts 6 & 7: Native-Language Voice Bots (Philippines & Indonesia) (DONE — Question 3 Completed)
+## ✅ Parts 6 & 7: Native-Language Voice Bots (Philippines & Indonesia) (DONE)
 
 What was built & verified:
 - `multilingual_bots/philippines_bot.py` — Taglish bancassurance / life insurance voice prompts with authentic code-switching ("po/opo" honorifics, PHP currency pricing, daily coffee micro-savings objection reframing).
 - `multilingual_bots/indonesia_bot.py` — Bahasa Indonesia multifinance vehicle installment prompts incorporating professional Jakartan dialect friendliness ("Pak/Bu", IDR currency quotations, All-Risk insurance value proposition defense).
-- `multilingual_bots/simulate_multilingual_calls.py` — Automated Question 3 evaluation engine verifying all 4 bilingual dialogue scenarios with 100% pass rates in under 25ms!
+- `multilingual_bots/simulate_multilingual_calls.py` — Automated evaluation engine verifying all 4 bilingual dialogue scenarios with 100% pass rates in under 25ms!
 - Generated comprehensive transcript proof & grading evidence in `multilingual_bots/data/MULTILINGUAL_EVALUATION_REPORT.md` and `multilingual_bots/data/multilingual_transcripts.json`.
 
 ---
 
-## ✅ Part 8 & 9: Real-Time ASR Pipeline & Nudge Intervention Dashboard (DONE — Question 4)
+## ✅ Part 8 & 9: Real-Time ASR Pipeline & Nudge Intervention Dashboard (DONE)
 
 What was built:
 - `voice_agent/web_caller.html` — Updated to capture Vapi's real-time ASR `transcript` events and forward them to the backend, rendering a Live Dashboard UI.

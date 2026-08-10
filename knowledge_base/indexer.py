@@ -19,7 +19,7 @@ except ImportError:
 
 try:
     from pinecone import Pinecone, ServerlessSpec, PineconeException
-except ImportError:
+except Exception:
     Pinecone = None
     ServerlessSpec = None
     PineconeException = Exception

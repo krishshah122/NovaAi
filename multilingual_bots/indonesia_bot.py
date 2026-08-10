@@ -2,7 +2,7 @@
 Indonesia Native Voice Agent Module (Bahasa Indonesia Multifinance & Installment Financing)
 
 Implements authentic conversational Bahasa Indonesia, regional Jakartan dialect naturalness, financial terminology
-(Angsuran, Tenor, DP, IDR calculation), respectful etiquette (Pak / Ibu), and zero-hallucination boundaries for Question 3.
+(Angsuran, Tenor, DP, IDR calculation), respectful etiquette (Pak / Ibu), and zero-hallucination boundaries.
 """
 from typing import Dict, Any, List
 
@@ -13,9 +13,9 @@ from typing import Dict, Any, List
 INDONESIA_MULTIFINANCE_KB: List[Dict[str, Any]] = [
     {
         "id": "idr_multi_oto_pro",
-        "title": "Darwix OtoPro Multifinance 2026",
+        "title": "Nova OtoPro Multifinance 2026",
         "content": (
-            "Darwix OtoPro adalah solusi pembiayaan kendaraan bermotor (Multifinance) unggulan untuk pribadi dan operasional usaha.\n\n"
+            "Nova OtoPro adalah solusi pembiayaan kendaraan bermotor (Multifinance) unggulan untuk pribadi dan operasional usaha.\n\n"
             "• Minimum Down Payment (DP): Mulai dari 15% dari harga OTR (On-The-Road) kendaraan.\n"
             "• Angsuran Bulanan (Installment): Sangat terjangkau, mulai dari Rp 2.850.000 / bulan untuk tenor 48 bulan (4 tahun).\n"
             "• Suku Bunga (Interest Rate): Bunga kompetitif tetap (fixed rate) 6,8% per tahun, bebas risiko fluktuasi inflasi.\n"
@@ -25,7 +25,7 @@ INDONESIA_MULTIFINANCE_KB: List[Dict[str, Any]] = [
     },
     {
         "id": "idr_multi_modal_kerja",
-        "title": "Darwix Modal Usaha Cepat (Working Capital)",
+        "title": "Nova Modal Usaha Cepat (Working Capital)",
         "content": (
             "Fasilitas pembiayaan tunai jaminan BPKB kendaraan untuk ekspansi modal kerja UMKM dan bisnis modern di Indonesia.\n\n"
             "• Plafon Pinjaman: Mulai dari Rp 50.000.000 hingga Rp 500.000.000 cair dalam 24 jam.\n"
@@ -58,7 +58,7 @@ def query_indonesia_kb(question: str) -> str:
 # 2. BAHASA INDONESIA SYSTEM PROMPT & REGIONAL JAKARTAN RULES
 # ---------------------------------------------------------------------------
 
-INDONESIA_BAHASA_PROMPT = """You are 'Budi', a professional, friendly, and solution-oriented Senior Multifinance Advisor representing Darwix AI Jakarta.
+INDONESIA_BAHASA_PROMPT = """You are 'Budi', a professional, friendly, and solution-oriented Senior Multifinance Advisor representing Nova AI Jakarta.
 
 # YOUR CORE LINGUISTIC IDENTITY (BAHASA INDONESIA WITH REGIONAL JAKARTAN EMPATHY):
 You MUST communicate in natural, highly conversational **Bahasa Indonesia** suitable for formal financing consultations yet infused with accessible regional Jakartan friendliness.
@@ -81,7 +81,7 @@ You MUST communicate in natural, highly conversational **Bahasa Indonesia** suit
 def get_indonesia_assistant_config(ngrok_url: str = "") -> Dict[str, Any]:
     """Return complete JSON payload for initializing the Indonesia Bahasa Voice Agent in Vapi."""
     return {
-        "name": "Darwix Indonesia - Bahasa Multifinance Advisor (Budi)",
+        "name": "Nova Indonesia - Bahasa Multifinance Advisor (Budi)",
         "model": {
             "provider": "groq",
             "model": "llama-3.1-70b-versatile",

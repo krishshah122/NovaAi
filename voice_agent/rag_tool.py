@@ -1,7 +1,7 @@
 """
 Voice Agent RAG and CRM Tools
 Defines tool JSON schemas for Vapi assistant declaration and executes back-end function implementations
-connecting live voice calls to the Question 2 vector database and business CRM lead persistence.
+connecting live voice calls to the Pinecone vector database and business CRM lead persistence.
 """
 
 import os
@@ -33,7 +33,7 @@ def get_retriever() -> HybridRetriever:
 
 def execute_query_knowledge_base(question: str) -> str:
     """
-    Execute semantic similarity query against our Question 2 knowledge base.
+    Execute semantic similarity query against our knowledge base.
     Returns formatted RAG passages with citations for Groq/Llama-3 voice consumption.
     """
     if not question or len(question.strip()) < 3:
@@ -60,7 +60,6 @@ def execute_submit_lead_to_crm(
 ) -> str:
     """
     Persist qualified caller profile and lead details into business CRM database.
-    Satisfies Question 1 optional business action requirement.
     """
     crm_dir = Path(__file__).resolve().parent / "data"
     crm_dir.mkdir(parents=True, exist_ok=True)

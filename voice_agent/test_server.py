@@ -117,7 +117,7 @@ def run_webhook_verification():
 
     print("\n==================================================================")
     print("[SUCCESS] ALL 4 FASTAPI WEBHOOK INTEGRATION TESTS PASSED 100%!")
-    print("          Your backend server is completely production-ready for Question 1!")
+    print("          Your backend server is completely production-ready!")
     print("==================================================================\n")
 
 

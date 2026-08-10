@@ -1,6 +1,6 @@
-# Darwix AI — Real-Time Voice Agent & RAG Assessment
+# Nova AI — Real-Time Voice Agent & RAG Platform
 
-An end-to-end, production-grade Voice AI implementation engineered to address all 4 questions of the AI Engineer Assessment. This repository bridges Vapi.ai's conversational web orchestrator with a highly accurate Pinecone Vector RAG database and a sub-second Groq Nudge Engine.
+An end-to-end, production-grade Voice AI platform that bridges Vapi.ai's conversational web orchestrator with a high-accuracy Pinecone Vector RAG database and a sub-second Groq Nudge Engine. Built to demonstrate enterprise-level voice assistant architecture with zero-hallucination compliance, multilingual support, and real-time agent assist.
 
 ---
 
@@ -26,14 +26,14 @@ An end-to-end, production-grade Voice AI implementation engineered to address al
 
 ---
 
-## 📋 Assessment Completion Matrix
+## 📦 Project Structure
 
-| Question | Implementation Highlights | Target Artifacts |
-|----------|---------------------------|-----------|
-| **Q1: Knowledge-Grounded Voice Agent** | Connected Vapi to local FastAPI. Strict prompting prevents hallucination. Lead qualification tool appends to CRM (`leads.json`). | `voice_agent/`, `web_caller.html` |
-| **Q2: Production-Ready Knowledge Base** | Scraped Healthcare.gov, cleaned text via regex, deduplicated via MD5, chunked, and embedded into Pinecone. | `knowledge_base/`, `Q2_RETRIEVAL_TESTS.md` |
-| **Q3: Native-Language Voice Bots** | Taglish (Mika) and Bahasa (Budi) bots. Implements code-switching and localized cultural honorifics. | `multilingual_bots/` |
-| **Q4: Live Insights & Nudges** | Groq Llama-3 stream analyzer evaluating transcript buffers in <600ms to detect compliance, frustration, and cross-sell signals. | `voice_agent/nudge_engine.py` |
+| Module | Description | Key Files |
+|--------|-------------|-----------|
+| **Voice Agent** | Vapi-connected voice bot with lead qualification, strict RAG grounding, and human escalation | `voice_agent/`, `web_caller.html` |
+| **Knowledge Base** | Production-ready data pipeline — scraping, cleaning, chunking, embedding, and Pinecone indexing | `knowledge_base/`, `RETRIEVAL_TESTS.md` |
+| **Multilingual Bots** | Taglish (Philippines) and Bahasa Indonesia voice bots with cultural code-switching and local honorifics | `multilingual_bots/` |
+| **Live Nudge Engine** | Groq Llama-3 stream analyzer detecting compliance, frustration, and cross-sell signals in <600ms | `voice_agent/nudge_engine.py` |
 
 ---
 
@@ -65,7 +65,7 @@ You can toggle between US English, Taglish, and Bahasa Indonesia instantly via t
 
 ---
 
-## 🗄️ Question 2: Production-Ready Knowledge Base Pipeline
+## 🗄️ Knowledge Base Pipeline
 
 Our Knowledge Base (KB) transforms unstructured web data into structured, traceable vectors for the Voice Agent's RAG system.
 
@@ -89,11 +89,11 @@ All records adhere to a strict Pydantic schema (`schema.py`):
 **Chunking:** We use logical document chunking (by section/product) rather than arbitrary token counts (like LangChain's 500-token splitter). This ensures that the LLM receives the entire context of a specific insurance product in a single coherent chunk, preventing deductibles from being separated from premiums across two different chunks.
 
 ### How to Test Retrieval
-We have compiled the 5 required test queries, complete with their retrieved chunks, citations, and accuracy verdicts, in the **[Q2_RETRIEVAL_TESTS.md](Q2_RETRIEVAL_TESTS.md)** file included in this repository.
+We have compiled test queries, complete with their retrieved chunks, citations, and accuracy verdicts, in the **[RETRIEVAL_TESTS.md](RETRIEVAL_TESTS.md)** file included in this repository.
 
 ---
 
-## 🌎 Question 3: Multilingual Evaluation & Compromises
+## 🌎 Multilingual Support & Compromises
 
 ### ASR (Speech-to-Text) Behavior
 Vapi relies heavily on Deepgram Nova-2. While Nova-2 is world-class for English, it struggles natively with heavy regional accents or rapid code-switching without explicit configuration. 
@@ -106,11 +106,11 @@ Vapi relies heavily on Deepgram Nova-2. While Nova-2 is world-class for English,
 
 ---
 
-## ⚡ Question 4: Nudge Engine Limitations & 10x Scale
+## ⚡ Nudge Engine — Limitations & Scaling Considerations
 
-Our Live Agent Assist Nudge Engine runs on `llama-3.3-70b-versatile` via Groq, achieving stunning ~500ms latency. 
+Our Live Agent Assist Nudge Engine runs on `llama-3.3-70b-versatile` via Groq, achieving ~500ms latency. 
 
-**However, at 10x scale or in extremely noisy call center environments, the following limitations apply:**
+**At 10x scale or in noisy call center environments, the following limitations apply:**
 
 1. **Token Window Saturation:** We currently feed the LLM a sliding window of the last 6 sentences. If a caller goes on a long, rambling 3-minute tangent, the "frustration" signal might fall out of the sliding window before the LLM evaluates it.
 2. **ASR Hallucinations (Noisy Audio):** If background noise causes the ASR to transcribe *"I need to pee"* instead of *"I need a fee waiver"*, the semantic Nudge Engine might incorrectly extract an out-of-bounds intent.

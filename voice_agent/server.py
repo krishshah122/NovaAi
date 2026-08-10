@@ -1,7 +1,7 @@
 """
 FastAPI Voice Agent Webhook Server
 Handles incoming Vapi.ai real-time voice tool call webhooks, bridging phone conversations directly to our
-Question 2 vector database and enterprise Mock CRM lead storage with sub-200ms processing latency.
+Pinecone vector database and enterprise Mock CRM lead storage with sub-200ms processing latency.
 """
 
 import sys
@@ -26,7 +26,7 @@ if str(project_root) not in sys.path:
 from voice_agent.rag_tool import execute_query_knowledge_base, execute_submit_lead_to_crm
 
 app = FastAPI(
-    title="Darwix AI Assessment — Voice Agent RAG Server",
+    title="Nova AI — Voice Agent RAG Server",
     version="1.0",
     description="Backend webhook handler connecting Vapi real-time calls to Pinecone RAG and CRM database."
 )
@@ -94,43 +94,32 @@ async def switch_assistant_region(region: str = "us"):
         return {"success": False, "error": f"Vapi API connection failed: {str(e)}"}
 
     model = cur.get("model", {})
-    tools_def = [
-        {
+    from voice_agent.rag_tool import VAPI_TOOLS_DEFINITIONS
+    
+    tools_def = []
+    for tool in VAPI_TOOLS_DEFINITIONS:
+        tools_def.append({
             "type": "function",
-            "function": {
-                "name": "query_knowledge_base",
-                "description": "Search vector database for health insurance or regional financial policies.",
-                "parameters": {"type": "object", "properties": {"question": {"type": "string"}}, "required": ["question"]}
-            },
+            "function": tool["function"],
             "server": {"url": url}
-        },
-        {
-            "type": "function",
-            "function": {
-                "name": "submit_lead_to_crm",
-                "description": "Submit qualified customer profile into CRM.",
-                "parameters": {"type": "object", "properties": {"caller_name": {"type": "string"}, "interested_plan_type": {"type": "string"}, "notes": {"type": "string"}}, "required": ["caller_name", "interested_plan_type"]}
-            },
-            "server": {"url": url}
-        }
-    ]
+        })
     model["tools"] = tools_def
 
     if region.lower() == "ph":
-        bot_name = "Darwix PH Taglish Bot"
+        bot_name = "Nova PH Taglish Bot"
         model["messages"] = [{"role": "system", "content": PHILIPPINES_TAGLISH_PROMPT}]
         voice = {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM", "stability": 0.55, "similarityBoost": 0.8}
     elif region.lower() == "id":
-        bot_name = "Darwix ID Bahasa Bot"
+        bot_name = "Nova ID Bahasa Bot"
         model["messages"] = [{"role": "system", "content": INDONESIA_BAHASA_PROMPT}]
         voice = {"provider": "11labs", "voiceId": "VR6AewLTigWG4xSOukaG", "stability": 0.60, "similarityBoost": 0.85}
     else:
-        bot_name = "Darwix US Health Advisor"
+        bot_name = "Nova US Health Advisor"
         model["messages"] = [{"role": "system", "content": LEAD_QUALIFICATION_SYSTEM_PROMPT}]
         voice = cur.get("voice", {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM"})
         region = "us"
 
-    payload = {"name": bot_name, "model": model, "voice": voice, "serverUrl": url}
+    payload = {"name": bot_name, "model": model, "voice": voice}
     try:
         p = requests.patch(f"https://api.vapi.ai/assistant/{asst_id}", json=payload, headers=headers, timeout=10)
         if p.status_code == 200:
@@ -161,7 +150,7 @@ async def root_status():
     """Verify backend webhook server functionality."""
     return {
         "status": "ONLINE",
-        "service": "Darwix AI Assessment RAG Webhook Endpoint",
+        "service": "Nova AI RAG Webhook Endpoint",
         "version": "1.0",
         "webhook_uri": "/webhook/vapi",
         "web_caller_ui": "/call"
@@ -225,78 +214,145 @@ async def vapi_webhook_handler(request: Request):
     Primary real-time Vapi Tool Calling webhook receiver.
     Supports both legacy single functionCall payloads and modern toolCallList array structures.
     """
+    import traceback
+    from datetime import datetime as dt
+
+    log_file = Path(__file__).resolve().parent / "data" / "webhook_debug.log"
+    log_file.parent.mkdir(parents=True, exist_ok=True)
+
     try:
         payload = await request.json()
     except Exception as e:
         print(f"[ERROR] Malformed JSON received on /webhook/vapi: {e}")
         raise HTTPException(status_code=400, detail="Invalid JSON payload received.")
 
+    # Log the full incoming payload
+    timestamp = dt.utcnow().isoformat()
+    with open(log_file, "a", encoding="utf-8") as lf:
+        lf.write(f"\n{'='*80}\n[{timestamp}] INCOMING WEBHOOK\n")
+        lf.write(json.dumps(payload, indent=2, ensure_ascii=False)[:5000])
+        lf.write("\n")
+
     message = payload.get("message", {})
     msg_type = message.get("type", "unknown")
 
-    print(f"\n[WEBHOOK RECEIVED] Event Type: '{msg_type}'")
+    print(f"\n[WEBHOOK RECEIVED] Event Type: '{msg_type}' | Top-level keys: {list(payload.keys())}")
 
-    # Handle standard function tool calls from Groq Llama-3 / Vapi
-    if msg_type == "function-call" or "functionCall" in message or "toolCalls" in message or "toolCallList" in message:
-        
-        # 1. Check for modern toolCallList (OpenAI/Groq tools standard in Vapi)
-        tool_call_list = message.get("toolCallList") or message.get("toolCalls")
-        if tool_call_list and isinstance(tool_call_list, list):
-            results_array = []
-            for tool_call in tool_call_list:
-                tool_id = tool_call.get("id", "unknown_id")
-                func_obj = tool_call.get("function", {})
-                func_name = func_obj.get("name")
-                
-                raw_args = func_obj.get("arguments", "{}")
-                if isinstance(raw_args, str):
-                    try:
-                        args_dict = json.loads(raw_args)
-                    except json.JSONDecodeError:
-                        args_dict = {}
-                elif isinstance(raw_args, dict):
-                    args_dict = raw_args
-                else:
-                    args_dict = {}
+    # ---- TOOL CALL EXTRACTION (handle ALL known Vapi formats) ----
+    tool_call_list = None
+    func_call = None
 
-                print(f"   -> Executing Tool [{tool_id}]: {func_name}({args_dict})")
-                exec_result = _execute_function(func_name, args_dict)
-                
-                results_array.append({
-                    "toolCallId": tool_id,
-                    "result": exec_result
-                })
+    # Format A: message.toolCallList
+    if message.get("toolCallList"):
+        tool_call_list = message["toolCallList"]
+        print(f"   -> Found tool calls in message.toolCallList ({len(tool_call_list)} calls)")
 
-            return JSONResponse(content={"results": results_array})
+    # Format B: message.toolCalls
+    elif message.get("toolCalls"):
+        tool_call_list = message["toolCalls"]
+        print(f"   -> Found tool calls in message.toolCalls ({len(tool_call_list)} calls)")
 
-        # 2. Check for legacy single functionCall payload
-        func_call = message.get("functionCall")
-        if func_call and isinstance(func_call, dict):
-            func_name = func_call.get("name")
-            args_dict = func_call.get("parameters", {})
-            if isinstance(args_dict, str):
+    # Format C: top-level toolCallList (some Vapi versions put it outside message)
+    elif payload.get("toolCallList"):
+        tool_call_list = payload["toolCallList"]
+        print(f"   -> Found tool calls in TOP-LEVEL toolCallList ({len(tool_call_list)} calls)")
+
+    # Format D: top-level toolCalls
+    elif payload.get("toolCalls"):
+        tool_call_list = payload["toolCalls"]
+        print(f"   -> Found tool calls in TOP-LEVEL toolCalls ({len(tool_call_list)} calls)")
+
+    # Format E: message.functionCall (legacy single call)
+    elif message.get("functionCall"):
+        func_call = message["functionCall"]
+        print(f"   -> Found legacy functionCall: {func_call.get('name')}")
+
+    # Format F: message.type == "function-call" with functionCall data
+    elif msg_type == "function-call" and "functionCall" in message:
+        func_call = message["functionCall"]
+        print(f"   -> Found function-call type with functionCall: {func_call.get('name')}")
+
+    # ---- EXECUTE TOOL CALLS ----
+    if tool_call_list and isinstance(tool_call_list, list):
+        results_array = []
+        for tool_call in tool_call_list:
+            tool_id = tool_call.get("id", "unknown_id")
+            func_obj = tool_call.get("function", {})
+            func_name = func_obj.get("name")
+
+            raw_args = func_obj.get("arguments", "{}")
+            if isinstance(raw_args, str):
                 try:
-                    args_dict = json.loads(args_dict)
-                except Exception:
+                    args_dict = json.loads(raw_args)
+                except json.JSONDecodeError:
                     args_dict = {}
+            elif isinstance(raw_args, dict):
+                args_dict = raw_args
+            else:
+                args_dict = {}
 
-            print(f"   -> Executing Legacy Function: {func_name}({args_dict})")
+            print(f"   -> Executing Tool [{tool_id}]: {func_name}({args_dict})")
             exec_result = _execute_function(func_name, args_dict)
-            return JSONResponse(content={"result": exec_result})
+
+            results_array.append({
+                "toolCallId": tool_id,
+                "result": exec_result
+            })
+
+            # Log what we're returning
+            with open(log_file, "a", encoding="utf-8") as lf:
+                lf.write(f"[{timestamp}] TOOL RESULT for {func_name}:\n")
+                lf.write(f"  toolCallId: {tool_id}\n")
+                lf.write(f"  result length: {len(exec_result)} chars\n")
+                lf.write(f"  result preview: {exec_result[:500]}\n\n")
+
+        response = {"results": results_array}
+        print(f"   -> Returning {len(results_array)} tool results to Vapi")
+        return JSONResponse(content=response)
+
+    if func_call and isinstance(func_call, dict):
+        func_name = func_call.get("name")
+        args_dict = func_call.get("parameters", {})
+        if isinstance(args_dict, str):
+            try:
+                args_dict = json.loads(args_dict)
+            except Exception:
+                args_dict = {}
+
+        print(f"   -> Executing Legacy Function: {func_name}({args_dict})")
+        exec_result = _execute_function(func_name, args_dict)
+
+        with open(log_file, "a", encoding="utf-8") as lf:
+            lf.write(f"[{timestamp}] LEGACY RESULT for {func_name}:\n")
+            lf.write(f"  result length: {len(exec_result)} chars\n")
+            lf.write(f"  result preview: {exec_result[:500]}\n\n")
+
+        return JSONResponse(content={"result": exec_result})
 
     # Handle other non-tool Vapi events (status updates, transcript notifications, end-of-call report)
-    if msg_type in ("status-update", "transcript", "end-of-call-report"):
+    if msg_type in ("status-update", "transcript", "end-of-call-report", "hang", "speech-update",
+                     "conversation-update", "model-output", "voice-input"):
         print(f"   -> Acknowledged non-blocking Vapi operational event: {msg_type}")
         return JSONResponse(content={"received": True, "status": "acknowledged"})
 
-    # Fallback return for unhandled webhook types
-    print(f"   -> Unhandled Vapi payload structure: {list(message.keys())}")
+    # Handle assistant-request (sent when serverUrl is defined on the assistant)
+    if msg_type == "assistant-request":
+        print(f"   -> Acknowledged assistant-request, proceeding with default configuration.")
+        # Vapi requires a JSON response containing an 'assistant' object to proceed with the call.
+        return JSONResponse(content={"assistant": {}})
+
+    # Fallback — LOG EVERYTHING so we can diagnose unknown formats
+    print(f"   -> UNHANDLED Vapi payload! type='{msg_type}' message_keys={list(message.keys())} top_keys={list(payload.keys())}")
+    with open(log_file, "a", encoding="utf-8") as lf:
+        lf.write(f"[{timestamp}] UNHANDLED PAYLOAD:\n")
+        lf.write(json.dumps(payload, indent=2, ensure_ascii=False)[:3000])
+        lf.write("\n\n")
     return JSONResponse(content={"received": True, "message": "Unhandled event type"})
 
 
 if __name__ == "__main__":
     print("==================================================================")
-    print("🚀 STARTING DARWIX VOICE AGENT RAG WEBHOOK SERVER (FASTAPI)")
+    print("🚀 STARTING NOVA VOICE AGENT RAG WEBHOOK SERVER (FASTAPI)")
     print("   Listening on http://0.0.0.0:8000")
     print("   Webhook URI:  http://localhost:8000/webhook/vapi")
     print("==================================================================")

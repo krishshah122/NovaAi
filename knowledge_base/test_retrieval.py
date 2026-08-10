@@ -1,7 +1,7 @@
 """
 Knowledge Base Retrieval Evaluation Engine
 Runs mandatory evaluation test queries across the hybrid vector retriever, verifies semantic relevance,
-computes confidence scores, and outputs formal evaluation evidence for assessment grading.
+computes confidence scores, and outputs formal evaluation evidence.
 """
 
 import sys
@@ -23,9 +23,9 @@ from knowledge_base.schema import KBQueryRequest, RetrievalTestResult
 from knowledge_base.retriever import HybridRetriever
 
 
-def run_assessment_retrieval_tests() -> List[RetrievalTestResult]:
+def run_retrieval_tests() -> List[RetrievalTestResult]:
     """
-    Execute the 5 required assessment domain queries across our RAG vector store,
+    Execute evaluation domain queries across our RAG vector store,
     verifying accuracy, grounding, and citation tracking.
     """
     print("=" * 70)
@@ -36,7 +36,7 @@ def run_assessment_retrieval_tests() -> List[RetrievalTestResult]:
 
     test_scenarios = [
         {
-            "query": "What is the exact deductible and out-of-pocket maximum for the Darwix Platinum Health Plus 2026 plan?",
+            "query": "What is the exact deductible and out-of-pocket maximum for the Nova Platinum Health Plus 2026 plan?",
             "expected_terms": ["platinum", "deductible", "out-of-pocket", "1,500", "750", "copay"],
             "explanation": "Properly retrieves specific product pricing data for the newly added Platinum Health Plus plan."
         },
@@ -121,7 +121,7 @@ def run_assessment_retrieval_tests() -> List[RetrievalTestResult]:
     try:
         with open(output_report, "w", encoding="utf-8") as f:
             json.dump([r.model_dump() for r in evaluation_results], f, indent=2, ensure_ascii=False)
-        print(f"[SAVE] Formal assessment evaluation evidence saved to: {output_report}")
+        print(f"[SAVE] Formal evaluation evidence saved to: {output_report}")
     except Exception as e:
         print(f"[ERROR] Could not save evaluation report: {e}")
 
@@ -130,4 +130,4 @@ def run_assessment_retrieval_tests() -> List[RetrievalTestResult]:
 
 
 if __name__ == "__main__":
-    run_assessment_retrieval_tests()
+    run_retrieval_tests()

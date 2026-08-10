@@ -35,7 +35,7 @@ from voice_agent.rag_tool import VAPI_TOOLS_DEFINITIONS
 
 def provision_vapi_assistant(webhook_url: str = "https://your-ngrok-url.ngrok-free.app/webhook/vapi") -> dict:
     """
-    Connect to Vapi API and create or update our Question 1 Health Insurance Advisor voice assistant.
+    Connect to Vapi API and create or update our Health Insurance Advisor voice assistant.
     """
     api_key = os.getenv("VAPI_API_KEY")
     if not api_key or api_key == "your_vapi_key_here":
@@ -63,8 +63,8 @@ def provision_vapi_assistant(webhook_url: str = "https://your-ngrok-url.ngrok-fr
 
     # Build assistant provisioning payload
     assistant_payload = {
-        "name": "Darwix Health Insurance Advisor (Assessment Q1)",
-        "firstMessage": "Hello! Thank you for calling our Health Insurance Advisory center. My name is Darwix Advisor. How can I assist you with your health coverage today?",
+        "name": "Nova Health Insurance Advisor",
+        "firstMessage": "Hello! Thank you for calling our Health Insurance Advisory center. My name is Nova Advisor. How can I assist you with your health coverage today?",
         "model": {
             "provider": "groq",
             "model": "llama-3.3-70b-versatile",

@@ -1,6 +1,6 @@
 # System Architecture
 
-This document provides a high-level overview of the Darwix AI Advisor system architecture, detailing how the Voice Agent, Knowledge Base, and Real-Time Nudge Engine interact.
+This document provides a high-level overview of the Nova AI Advisor system architecture, detailing how the Voice Agent, Knowledge Base, and Real-Time Nudge Engine interact.
 
 ## High-Level Architecture Diagram
 
@@ -17,7 +17,7 @@ graph TD
     User(("User Voice")):::frontend
     Browser["Web Caller UI<br/>(HTML/JS)"]:::frontend
     Vapi["Vapi AI Cloud<br/>Voice Agent Orchestrator"]:::vapi
-    FastAPI["FastAPI Webhook Server<br/>(Darwix Backend)"]:::backend
+    FastAPI["FastAPI Webhook Server<br/>(Nova Backend)"]:::backend
     Pinecone[("Pinecone Vector DB<br/>RAG Knowledge")]:::db
     GroqLLM["Groq Llama-3<br/>Nudge Engine"]:::groq
     CRM[("Mock CRM<br/>leads.json")]:::db
