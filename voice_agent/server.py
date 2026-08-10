@@ -74,7 +74,7 @@ async def get_client_config():
 
 
 @app.api_route("/api/switch_assistant", methods=["GET", "POST"], tags=["UI"])
-async def switch_assistant_region(region: str = "us"):
+async def switch_assistant_region(request: Request, region: str = "us"):
     """Dynamically switch Vapi Cloud Assistant persona, language prompt, and tools between US, PH, and ID."""
     import requests, os
     from voice_agent.prompts import LEAD_QUALIFICATION_SYSTEM_PROMPT
@@ -83,7 +83,7 @@ async def switch_assistant_region(region: str = "us"):
     
     api_key = os.getenv("VAPI_API_KEY", "d2685516-ae94-4892-8abd-4db236d65f64")
     asst_id = os.getenv("VAPI_ASSISTANT_ID", "e3f52f6f-a0f7-4c1e-99d6-09e5dd9f024f")
-    url = "https://majority-ribcage-contented.ngrok-free.dev/webhook/vapi"
+    url = str(request.base_url).rstrip("/") + "/webhook/vapi"
     
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     
