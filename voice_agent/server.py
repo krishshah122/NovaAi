@@ -55,8 +55,8 @@ async def serve_web_caller():
 async def get_client_config():
     """Securely serve frontend client connection configuration without exposing keys in visible form inputs."""
     import os
-    pub_key = os.getenv("VAPI_PUBLIC_KEY") or os.getenv("VAPI_API_KEY", "d2685516-ae94-4892-8abd-4db236d65f64")
-    asst_id = os.getenv("VAPI_ASSISTANT_ID", "")
+    pub_key = os.getenv("VAPI_PUBLIC_KEY")
+    asst_id = os.getenv("VAPI_ASSISTANT_ID")
     
     config_path = Path(__file__).resolve().parent / "data" / "vapi_assistant_config.json"
     if config_path.exists():
@@ -81,8 +81,11 @@ async def switch_assistant_region(request: Request, region: str = "us"):
     from multilingual_bots.philippines_bot import PHILIPPINES_TAGLISH_PROMPT
     from multilingual_bots.indonesia_bot import INDONESIA_BAHASA_PROMPT
     
-    api_key = os.getenv("VAPI_API_KEY", "d2685516-ae94-4892-8abd-4db236d65f64")
-    asst_id = os.getenv("VAPI_ASSISTANT_ID", "e3f52f6f-a0f7-4c1e-99d6-09e5dd9f024f")
+    api_key = os.getenv("VAPI_API_KEY")
+    asst_id = os.getenv("VAPI_ASSISTANT_ID")
+    
+    if not api_key or not asst_id:
+        return {"success": False, "error": "Server missing VAPI_API_KEY or VAPI_ASSISTANT_ID environment variables."}
     url = str(request.base_url).rstrip("/") + "/webhook/vapi"
     
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}

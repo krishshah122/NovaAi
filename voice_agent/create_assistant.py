@@ -81,11 +81,6 @@ def provision_vapi_assistant(webhook_url: str = "https://your-ngrok-url.ngrok-fr
             "provider": "openai",
             "voiceId": "nova"
         },
-        "transcoder": {
-            "provider": "deepgram",
-            "model": "nova-2",
-            "language": "en"
-        },
         "silenceTimeoutSeconds": 30,
         "maxDurationSeconds": 600
     }
