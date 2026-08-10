@@ -26,9 +26,9 @@ if str(project_root) not in sys.path:
 from voice_agent.rag_tool import execute_query_knowledge_base, execute_submit_lead_to_crm
 
 app = FastAPI(
-    title="Nova AI — Voice Agent RAG Server",
-    version="1.0",
-    description="Backend webhook handler connecting Vapi real-time calls to Pinecone RAG and CRM database."
+    title="Nova AI Real-Time Agent Bridge",
+    description="Backend integrating Vapi.ai voice agents with CRM logic and Pinecone RAG.",
+    version="1.0.0"
 )
 
 # Allow CORS for local testing or web calling UI
@@ -39,6 +39,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def startup_event():
+    print("[SYSTEM] Pre-loading RAG AI embedding models into RAM to prevent cold-start webhook timeouts...")
+    from voice_agent.rag_tool import get_retriever
+    try:
+        get_retriever().embedder._load_model()
+        print("[SYSTEM] AI Models successfully pre-loaded and ready for instant retrieval.")
+    except Exception as e:
+        print(f"[SYSTEM ERROR] Failed to pre-load AI models: {e}")
 
 
 @app.get("/call", response_class=HTMLResponse, tags=["UI"])
@@ -86,7 +96,10 @@ async def switch_assistant_region(request: Request, region: str = "us"):
     
     if not api_key or not asst_id:
         return {"success": False, "error": "Server missing VAPI_API_KEY or VAPI_ASSISTANT_ID environment variables."}
-    url = str(request.base_url).rstrip("/") + "/webhook/vapi"
+    base_url_str = str(request.base_url).rstrip("/")
+    if base_url_str.startswith("http://") and "onrender.com" in base_url_str:
+        base_url_str = base_url_str.replace("http://", "https://")
+    url = base_url_str + "/webhook/vapi"
     
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
     
