@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,9 +100,20 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
         }
 
         .call-action {
@@ -274,8 +286,13 @@
             animation: slideIn 0.3s ease-out;
         }
 
-        .nudge-card.compliance { border-left-color: #ef4444; }
-        .nudge-card.cross_sell { border-left-color: #10b981; }
+        .nudge-card.compliance {
+            border-left-color: #ef4444;
+        }
+
+        .nudge-card.cross_sell {
+            border-left-color: #10b981;
+        }
 
         .nudge-header {
             display: flex;
@@ -294,296 +311,306 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>Nova AI Advisor</h1>
-        <p>Real-Time Health Insurance & Multifinance Advisory<br>Powered by Vapi, Groq Llama-3 & Pinecone Vector RAG</p>
-    </div>
-
-    <div class="region-selector" id="regionSelector">
-        <button class="btn-region active" data-region="us">🇺🇸 US English (Health)</button>
-        <button class="btn-region" data-region="ph">🇵🇭 Philippines (Taglish - Mika)</button>
-        <button class="btn-region" data-region="id">🇮🇩 Indonesia (Bahasa - Budi)</button>
-    </div>
-
-    <div class="status-pill">
-        <div class="dot" id="statusDot"></div>
-        <span id="statusText">System Ready (Disconnected)</span>
-    </div>
-
-    <div class="call-action">
-        <button id="callButton" class="btn-call">
-            <span>📞 Call Nova Advisor</span>
-        </button>
-    </div>
-
-    <div class="dashboard-container">
-        <div>
-            <div class="section-title">🎙️ Real-Time Call Transcript</div>
-            <div class="transcript-box" id="transcriptContainer">
-                <div class="bubble system">Conversation transcript will stream live as you speak...</div>
-            </div>
+    <div class="container">
+        <div class="header">
+            <h1>Nova AI Advisor</h1>
+            <p>Real-Time Health Insurance & Multifinance Advisory<br>Powered by Vapi, Groq Llama-3 & Pinecone Vector RAG
+            </p>
         </div>
-        <div>
-            <div class="section-title">⚡ Live Agent Assist Nudges</div>
-            <div class="nudge-panel" id="nudgeContainer">
-                <div style="color: #64748b; font-size: 0.9rem; text-align: center; margin-top: 2rem;">
-                    Awaiting signals...<br>Nudges will appear here in real-time.
+
+        <div class="region-selector" id="regionSelector">
+            <button class="btn-region active" data-region="us">🇺🇸 US English (Health)</button>
+            <button class="btn-region" data-region="ph">🇵🇭 Philippines (Taglish - Mika)</button>
+            <button class="btn-region" data-region="id">🇮🇩 Indonesia (Bahasa - Budi)</button>
+        </div>
+
+        <div class="status-pill">
+            <div class="dot" id="statusDot"></div>
+            <span id="statusText">System Ready (Disconnected)</span>
+        </div>
+
+        <div class="call-action">
+            <button id="callButton" class="btn-call">
+                <span>📞 Call Nova Advisor</span>
+            </button>
+        </div>
+
+        <div class="dashboard-container">
+            <div>
+                <div class="section-title">🎙️ Real-Time Call Transcript</div>
+                <div class="transcript-box" id="transcriptContainer">
+                    <div class="bubble system">Conversation transcript will stream live as you speak...</div>
+                </div>
+            </div>
+            <div>
+                <div class="section-title">⚡ Live Agent Assist Nudges</div>
+                <div class="nudge-panel" id="nudgeContainer">
+                    <div style="color: #64748b; font-size: 0.9rem; text-align: center; margin-top: 2rem;">
+                        Awaiting signals...<br>Nudges will appear here in real-time.
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="section-title">⚡ System Webhook & SDK Logs</div>
+        <div class="log-box" id="logConsole">
+            [SYSTEM] Professional Voice Interface with Live Transcription loaded.<br>
+            [READY] Select your targeted country region above and hit 'Call Nova Advisor'!
+        </div>
     </div>
 
-    <div class="section-title">⚡ System Webhook & SDK Logs</div>
-    <div class="log-box" id="logConsole">
-        [SYSTEM] Professional Voice Interface with Live Transcription loaded.<br>
-        [READY] Select your targeted country region above and hit 'Call Nova Advisor'!
-    </div>
-</div>
+    <script type="module">
+        import Vapi from "https://esm.sh/@vapi-ai/web@2.6.1";
+        window.Vapi = Vapi;
 
-<script type="module">
-    import Vapi from "https://esm.sh/@vapi-ai/web@2.6.1";
-    window.Vapi = Vapi;
+        let vapiInstance = null;
+        let isCallActive = false;
+        let hasTranscriptStarted = false;
 
-    let vapiInstance = null;
-    let isCallActive = false;
-    let hasTranscriptStarted = false;
-    
-    // Nudge Engine State
-    let session_id = "sess_" + Math.random().toString(36).substr(2, 9);
-    let transcriptBuffer = [];
+        // Nudge Engine State
+        let session_id = "sess_" + Math.random().toString(36).substr(2, 9);
+        let transcriptBuffer = [];
 
-    const statusDot = document.getElementById('statusDot');
-    const statusText = document.getElementById('statusText');
-    const callButton = document.getElementById('callButton');
-    const logConsole = document.getElementById('logConsole');
-    const transcriptContainer = document.getElementById('transcriptContainer');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const callButton = document.getElementById('callButton');
+        const logConsole = document.getElementById('logConsole');
+        const transcriptContainer = document.getElementById('transcriptContainer');
 
-    function log(msg) {
-        logConsole.innerHTML += `<br>[${new Date().toLocaleTimeString()}] ${msg}`;
-        logConsole.scrollTop = logConsole.scrollHeight;
-    }
+        function log(msg) {
+            logConsole.innerHTML += `<br>[${new Date().toLocaleTimeString()}] ${msg}`;
+            logConsole.scrollTop = logConsole.scrollHeight;
+        }
 
-    // Region Switcher Logic
-    const regionButtons = document.querySelectorAll('.btn-region');
-    regionButtons.forEach(btn => {
-        btn.addEventListener('click', async () => {
-            if (isCallActive) {
-                alert("Please end the active call before switching country regions.");
-                return;
-            }
-            regionButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const selectedRegion = btn.getAttribute('data-region');
-            log(`⏳ Switching cloud voice bot to region [${selectedRegion.toUpperCase()}]...`);
-            statusText.innerText = "Reconfiguring AI Persona & Language...";
-            
-            try {
-                const res = await fetch(`/api/switch_assistant?region=${selectedRegion}`, { method: 'POST' });
-                const data = await res.json();
-                if (data.success) {
-                    log(`✅ Activated: ${data.bot_name}! Ready for live calls.`);
-                    statusText.innerText = `Ready (${selectedRegion.toUpperCase()} Dialect Active)`;
-                } else {
-                    log(`❌ Error switching region: ${data.error}`);
-                    statusText.innerText = "System Ready (Fallback mode)";
+        // Region Switcher Logic
+        const regionButtons = document.querySelectorAll('.btn-region');
+        regionButtons.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (isCallActive) {
+                    alert("Please end the active call before switching country regions.");
+                    return;
                 }
-            } catch (err) {
-                log(`❌ Failed to reach backend switcher API: ${err.message}`);
-                statusText.innerText = "System Ready (Offline switcher)";
+                regionButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const selectedRegion = btn.getAttribute('data-region');
+                log(`⏳ Switching cloud voice bot to region [${selectedRegion.toUpperCase()}]...`);
+                statusText.innerText = "Reconfiguring AI Persona & Language...";
+
+                try {
+                    const res = await fetch(`https://darwixai-assignement.onrender.com/api/switch_assistant?region=${selectedRegion}`, { method: 'POST' });
+                    const data = await res.json();
+                    if (data.success) {
+                        log(`✅ Activated: ${data.bot_name}! Ready for live calls.`);
+                        statusText.innerText = `Ready (${selectedRegion.toUpperCase()} Dialect Active)`;
+                    } else {
+                        log(`❌ Error switching region: ${data.error}`);
+                        statusText.innerText = "System Ready (Fallback mode)";
+                    }
+                } catch (err) {
+                    log(`❌ Failed to reach backend switcher API: ${err.message}`);
+                    statusText.innerText = "System Ready (Offline switcher)";
+                }
+            });
+        });
+
+        // Auto-sync Vapi Cloud Assistant with active UI tab on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const activeBtn = document.querySelector('.btn-region.active');
+            if (activeBtn) {
+                setTimeout(() => activeBtn.click(), 500); // slight delay to let UI load
             }
         });
-    });
 
-    // Auto-sync Vapi Cloud Assistant with active UI tab on page load
-    window.addEventListener('DOMContentLoaded', () => {
-        const activeBtn = document.querySelector('.btn-region.active');
-        if (activeBtn) {
-            setTimeout(() => activeBtn.click(), 500); // slight delay to let UI load
-        }
-    });
-
-    function addTranscript(sender, text) {
-        if (!hasTranscriptStarted) {
-            transcriptContainer.innerHTML = '';
-            hasTranscriptStarted = true;
-        }
-        const bubble = document.createElement('div');
-        bubble.className = `bubble ${sender}`;
-        const prefix = sender === 'user' ? '👤 You' : '🤖 Nova Advisor';
-        bubble.innerHTML = `<strong>${prefix}:</strong> ${text}`;
-        transcriptContainer.appendChild(bubble);
-        transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
-    }
-
-    function toggleCall() {
-        if (isCallActive) {
-            stopCall();
-        } else {
-            startCall();
-        }
-    }
-
-    callButton.addEventListener('click', toggleCall);
-    window.toggleCall = toggleCall;
-
-    async function startCall() {
-        log("Resolving backend voice agent parameters via /api/config...");
-        try {
-            const resp = await fetch('/api/config');
-            if (!resp.ok) {
-                throw new Error("Could not connect to FastAPI server endpoint (/api/config).");
+        function addTranscript(sender, text) {
+            if (!hasTranscriptStarted) {
+                transcriptContainer.innerHTML = '';
+                hasTranscriptStarted = true;
             }
-            const config = await resp.json();
-            
-            if (!config.public_key || !config.assistant_id) {
-                log("⚠️ WARNING: Missing Assistant UUID in backend configuration.");
-                alert("Cannot start call: Vapi Assistant UUID not configured in backend server environment!");
-                return;
+            const bubble = document.createElement('div');
+            bubble.className = `bubble ${sender}`;
+            const prefix = sender === 'user' ? '👤 You' : '🤖 Nova Advisor';
+            bubble.innerHTML = `<strong>${prefix}:</strong> ${text}`;
+            transcriptContainer.appendChild(bubble);
+            transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+        }
+
+        function toggleCall() {
+            if (isCallActive) {
+                stopCall();
+            } else {
+                startCall();
             }
+        }
 
-            log("Initializing Vapi Speech Engine v2.6.1...");
-            vapiInstance = new Vapi(config.public_key);
+        callButton.addEventListener('click', toggleCall);
+        window.toggleCall = toggleCall;
 
-            vapiInstance.on('call-start', () => {
-                isCallActive = true;
-                statusDot.className = "dot active";
-                statusText.innerText = "Call Connected (Listening)";
-                callButton.className = "btn-call end-call";
-                callButton.innerHTML = "<span>🛑 End Consultation</span>";
-                log("Call Connected! Speak directly into your microphone now.");
-                addTranscript("system", "📞 Audio channel connected. Start speaking!");
-                hasTranscriptStarted = false; // Reset to allow clear first bubble
-            });
-
-            vapiInstance.on('speech-start', () => {
-                statusDot.className = "dot talking";
-                statusText.innerText = "Advisor Speaking...";
-                log("Nova Advisor is responding...");
-            });
-
-            vapiInstance.on('speech-end', () => {
-                statusDot.className = "dot active";
-                statusText.innerText = "Call Connected (Listening for your voice)";
-            });
-
-            // Listen for live transcript streaming events
-            vapiInstance.on('message', (message) => {
-                if (message.type === 'transcript' && message.transcriptType === 'final') {
-                    const role = message.role === 'user' ? 'user' : 'assistant';
-                    addTranscript(role, message.transcript);
-                    
-                    // Push to local buffer and trigger Nudge Engine
-                    transcriptBuffer.push({ role: role, content: message.transcript });
-                    if (transcriptBuffer.length > 10) transcriptBuffer.shift();
-                    
-                    analyzeLiveTranscript();
-                } else if (message.type === 'function-call') {
-                    log(`🛠️ <span style="color: #f59e0b">AI is calling database tool: <b>${message.functionCall.name}</b></span>`);
-                } else if (message.type === 'tool-calls') {
-                    message.toolCalls.forEach(tc => {
-                        log(`🛠️ <span style="color: #f59e0b">AI is calling database tool: <b>${tc.function.name}</b></span>`);
-                    });
+        async function startCall() {
+            log("Resolving backend voice agent parameters via /api/config...");
+            try {
+                const resp = await fetch('https://darwixai-assignement.onrender.com/api/config');
+                if (!resp.ok) {
+                    throw new Error("Could not connect to FastAPI server endpoint (/api/config).");
                 }
-            });
+                const config = await resp.json();
 
-            vapiInstance.on('call-end', () => {
-                resetUI();
-                log("Consultation ended by server or user.");
-            });
+                if (!config.public_key || !config.assistant_id) {
+                    log("⚠️ WARNING: Missing Assistant UUID in backend configuration.");
+                    alert("Cannot start call: Vapi Assistant UUID not configured in backend server environment!");
+                    return;
+                }
 
-            vapiInstance.on('error', (err) => {
-                console.error(err);
-                log("Error: " + (err.message || JSON.stringify(err)));
-                resetUI();
-            });
+                log("Initializing Vapi Speech Engine v2.6.1...");
+                vapiInstance = new Vapi(config.public_key);
 
-            log("Requesting microphone permissions & opening WebSocket channel...");
-            vapiInstance.start(config.assistant_id);
+                vapiInstance.on('call-start', () => {
+                    isCallActive = true;
+                    statusDot.className = "dot active";
+                    statusText.innerText = "Call Connected (Listening)";
+                    callButton.className = "btn-call end-call";
+                    callButton.innerHTML = "<span>🛑 End Consultation</span>";
+                    log("Call Connected! Speak directly into your microphone now.");
+                    addTranscript("system", "📞 Audio channel connected. Start speaking!");
+                    hasTranscriptStarted = false; // Reset to allow clear first bubble
+                });
 
-        } catch (e) {
-            log("❌ Startup failed: " + e.message);
-            alert("Connection error: " + e.message + "\nMake sure you are accessing this interface via http://localhost:8000/call");
-        }
-    }
+                vapiInstance.on('speech-start', () => {
+                    statusDot.className = "dot talking";
+                    statusText.innerText = "Advisor Speaking...";
+                    log("Nova Advisor is responding...");
+                });
 
-    function stopCall() {
-        if (vapiInstance) {
-            vapiInstance.stop();
-            log("Disconnecting call...");
-        }
-        resetUI();
-    }
+                vapiInstance.on('speech-end', () => {
+                    statusDot.className = "dot active";
+                    statusText.innerText = "Call Connected (Listening for your voice)";
+                });
 
-    function resetUI() {
-        isCallActive = false;
-        statusDot.className = "dot";
-        statusText.innerText = "System Ready (Disconnected)";
-        callButton.className = "btn-call";
-        callButton.innerHTML = "<span>📞 Call Nova Advisor</span>";
-        session_id = "sess_" + Math.random().toString(36).substr(2, 9);
-        transcriptBuffer = [];
-    }
-    
-    // --- Nudge Engine Integration ---
-    let isAnalyzing = false;
-    async function analyzeLiveTranscript() {
-        if (isAnalyzing || transcriptBuffer.length === 0) return;
-        isAnalyzing = true;
-        
-        try {
-            const res = await fetch('/api/analyze_transcript', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session_id: session_id,
-                    transcript_buffer: transcriptBuffer
-                })
-            });
-            const data = await res.json();
-            
-            if (data.nudge && data.nudge.type && data.nudge.type !== 'none') {
-                displayNudge(data.nudge, data.latency_ms);
+                // Listen for live transcript streaming events
+                vapiInstance.on('message', (message) => {
+                    if (message.type === 'transcript' && message.transcriptType === 'final') {
+                        const role = message.role === 'user' ? 'user' : 'assistant';
+                        addTranscript(role, message.transcript);
+
+                        // Push to local buffer and trigger Nudge Engine
+                        transcriptBuffer.push({ role: role, content: message.transcript });
+                        if (transcriptBuffer.length > 10) transcriptBuffer.shift();
+
+                        analyzeLiveTranscript();
+                    } else if (message.type === 'function-call') {
+                        log(`🛠️ <span style="color: #f59e0b">AI is calling database tool: <b>${message.functionCall.name}</b></span>`);
+                    } else if (message.type === 'tool-calls') {
+                        message.toolCalls.forEach(tc => {
+                            log(`🛠️ <span style="color: #f59e0b">AI is calling database tool: <b>${tc.function.name}</b></span>`);
+                        });
+                    }
+                });
+
+                vapiInstance.on('call-end', () => {
+                    resetUI();
+                    log("Consultation ended by server or user.");
+                });
+
+                vapiInstance.on('error', (err) => {
+                    console.error(err);
+                    log("Error: " + (err.message || JSON.stringify(err)));
+                    resetUI();
+                });
+
+                log("Requesting microphone permissions & opening WebSocket channel...");
+                vapiInstance.start(config.assistant_id);
+
+            } catch (e) {
+                log("❌ Startup failed: " + e.message);
+                alert("Connection error: " + e.message + "\nMake sure you are accessing this interface via http://localhost:8000/call");
             }
-        } catch (e) {
-            console.error("Nudge Engine Error:", e);
-        } finally {
-            isAnalyzing = false;
         }
-    }
-    
-    function displayNudge(nudge, latency_ms) {
-        const container = document.getElementById('nudgeContainer');
-        
-        // Clear placeholder if first nudge
-        if (container.innerHTML.includes("Awaiting signals")) {
-            container.innerHTML = "";
+
+        function stopCall() {
+            if (vapiInstance) {
+                vapiInstance.stop();
+                log("Disconnecting call...");
+            }
+            resetUI();
         }
-        
-        const card = document.createElement('div');
-        card.className = `nudge-card ${nudge.type}`;
-        
-        const typeLabel = nudge.type.replace('_', ' ').toUpperCase();
-        const icon = nudge.type === 'frustration' ? '⚠️' : nudge.type === 'compliance' ? '🚨' : '💡';
-        
-        card.innerHTML = `
+
+        function resetUI() {
+            isCallActive = false;
+            statusDot.className = "dot";
+            statusText.innerText = "System Ready (Disconnected)";
+            callButton.className = "btn-call";
+            callButton.innerHTML = "<span>📞 Call Nova Advisor</span>";
+            session_id = "sess_" + Math.random().toString(36).substr(2, 9);
+            transcriptBuffer = [];
+        }
+
+        // --- Nudge Engine Integration ---
+        let isAnalyzing = false;
+        async function analyzeLiveTranscript() {
+            if (isAnalyzing || transcriptBuffer.length === 0) return;
+            isAnalyzing = true;
+
+            try {
+                const res = await fetch('https://darwixai-assignement.onrender.com/api/analyze_transcript', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: session_id,
+                        transcript_buffer: transcriptBuffer
+                    })
+                });
+                const data = await res.json();
+
+                if (data.nudge && data.nudge.type && data.nudge.type !== 'none') {
+                    displayNudge(data.nudge, data.latency_ms);
+                }
+            } catch (e) {
+                console.error("Nudge Engine Error:", e);
+            } finally {
+                isAnalyzing = false;
+            }
+        }
+
+        function displayNudge(nudge, latency_ms) {
+            const container = document.getElementById('nudgeContainer');
+
+            // Clear placeholder if first nudge
+            if (container.innerHTML.includes("Awaiting signals")) {
+                container.innerHTML = "";
+            }
+
+            const card = document.createElement('div');
+            card.className = `nudge-card ${nudge.type}`;
+
+            const typeLabel = nudge.type.replace('_', ' ').toUpperCase();
+            const icon = nudge.type === 'frustration' ? '⚠️' : nudge.type === 'compliance' ? '🚨' : '💡';
+
+            card.innerHTML = `
             <div class="nudge-header">
                 <span>${icon} ${typeLabel}</span>
                 <span>${latency_ms}ms</span>
             </div>
             <div class="nudge-msg">${nudge.message}</div>
         `;
-        
-        container.prepend(card);
-    }
-</script>
+
+            container.prepend(card);
+        }
+    </script>
 </body>
+
 </html>
