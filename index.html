@@ -437,16 +437,28 @@
             }
         });
 
+        let lastTranscriptRole = null;
+        let lastTranscriptBubble = null;
+
         function addTranscript(sender, text) {
             if (!hasTranscriptStarted) {
                 transcriptContainer.innerHTML = '';
                 hasTranscriptStarted = true;
             }
-            const bubble = document.createElement('div');
-            bubble.className = `bubble ${sender}`;
-            const prefix = sender === 'user' ? '👤 You' : '🤖 Nova Advisor';
-            bubble.innerHTML = `<strong>${prefix}:</strong> ${text}`;
-            transcriptContainer.appendChild(bubble);
+
+            // If the same speaker is still talking, append to the existing bubble
+            if (sender === lastTranscriptRole && lastTranscriptBubble) {
+                lastTranscriptBubble.innerHTML += ' ' + text;
+            } else {
+                // New speaker — create a new bubble
+                const bubble = document.createElement('div');
+                bubble.className = `bubble ${sender}`;
+                const prefix = sender === 'user' ? '👤 You' : '🤖 Nova Advisor';
+                bubble.innerHTML = `<strong>${prefix}:</strong> ${text}`;
+                transcriptContainer.appendChild(bubble);
+                lastTranscriptBubble = bubble;
+                lastTranscriptRole = sender;
+            }
             transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
         }
 
@@ -557,6 +569,8 @@
             callButton.innerHTML = "<span>📞 Call Nova Advisor</span>";
             session_id = "sess_" + Math.random().toString(36).substr(2, 9);
             transcriptBuffer = [];
+            lastTranscriptRole = null;
+            lastTranscriptBubble = null;
         }
 
         // --- Nudge Engine Integration ---

@@ -121,21 +121,24 @@ async def switch_assistant_region(request: Request, region: str = "us"):
         })
     model["tools"] = tools_def
 
+    first_msg = "Hi there! I'm Nova, your health insurance advisor. What can I help you with today?"
     if region.lower() == "ph":
         bot_name = "Nova PH Taglish Bot"
         model["messages"] = [{"role": "system", "content": PHILIPPINES_TAGLISH_PROMPT}]
         voice = {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM", "stability": 0.55, "similarityBoost": 0.8}
+        first_msg = "Kumusta! Ako si Nova, ang inyong health insurance advisor. Paano kita matutulungan ngayon?"
     elif region.lower() == "id":
         bot_name = "Nova ID Bahasa Bot"
         model["messages"] = [{"role": "system", "content": INDONESIA_BAHASA_PROMPT}]
         voice = {"provider": "11labs", "voiceId": "VR6AewLTigWG4xSOukaG", "stability": 0.60, "similarityBoost": 0.85}
+        first_msg = "Halo! Saya Nova, penasihat asuransi kesehatan Anda. Ada yang bisa saya bantu hari ini?"
     else:
         bot_name = "Nova US Health Advisor"
         model["messages"] = [{"role": "system", "content": LEAD_QUALIFICATION_SYSTEM_PROMPT}]
         voice = cur.get("voice", {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM"})
         region = "us"
 
-    payload = {"name": bot_name, "model": model, "voice": voice}
+    payload = {"name": bot_name, "model": model, "voice": voice, "firstMessage": first_msg}
     try:
         p = requests.patch(f"https://api.vapi.ai/assistant/{asst_id}", json=payload, headers=headers, timeout=10)
         if p.status_code == 200:
