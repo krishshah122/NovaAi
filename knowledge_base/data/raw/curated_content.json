@@ -7,7 +7,14 @@
     "subcategory": "bronze_plan",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/choose-a-plan/plan-categories/",
-    "tags": ["bronze", "plan", "premium", "deductible", "costs", "essential health benefits"]
+    "tags": [
+      "bronze",
+      "plan",
+      "premium",
+      "deductible",
+      "costs",
+      "essential health benefits"
+    ]
   },
   {
     "id": "supp_plan_silver",
@@ -17,7 +24,14 @@
     "subcategory": "silver_plan",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/choose-a-plan/plan-categories/",
-    "tags": ["silver", "plan", "premium", "cost-sharing reductions", "CSR", "income"]
+    "tags": [
+      "silver",
+      "plan",
+      "premium",
+      "cost-sharing reductions",
+      "CSR",
+      "income"
+    ]
   },
   {
     "id": "supp_plan_gold",
@@ -27,7 +41,13 @@
     "subcategory": "gold_plan",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/choose-a-plan/plan-categories/",
-    "tags": ["gold", "plan", "premium", "deductible", "chronic conditions"]
+    "tags": [
+      "gold",
+      "plan",
+      "premium",
+      "deductible",
+      "chronic conditions"
+    ]
   },
   {
     "id": "supp_plan_platinum",
@@ -37,7 +57,13 @@
     "subcategory": "platinum_plan",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/choose-a-plan/plan-categories/",
-    "tags": ["platinum", "plan", "premium", "comprehensive", "low deductible"]
+    "tags": [
+      "platinum",
+      "plan",
+      "premium",
+      "comprehensive",
+      "low deductible"
+    ]
   },
   {
     "id": "supp_plan_catastrophic",
@@ -47,7 +73,13 @@
     "subcategory": "catastrophic_plan",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/choose-a-plan/plan-categories/",
-    "tags": ["catastrophic", "plan", "under 30", "low premium", "high deductible"]
+    "tags": [
+      "catastrophic",
+      "plan",
+      "under 30",
+      "low premium",
+      "high deductible"
+    ]
   },
   {
     "id": "supp_eligibility_marketplace",
@@ -57,7 +89,15 @@
     "subcategory": "marketplace_eligibility",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/quick-guide/eligibility/",
-    "tags": ["eligibility", "marketplace", "enrollment", "open enrollment", "special enrollment", "income", "FPL"]
+    "tags": [
+      "eligibility",
+      "marketplace",
+      "enrollment",
+      "open enrollment",
+      "special enrollment",
+      "income",
+      "FPL"
+    ]
   },
   {
     "id": "supp_coverage_essential",
@@ -67,7 +107,13 @@
     "subcategory": "essential_health_benefits",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/coverage/what-marketplace-plans-cover/",
-    "tags": ["essential health benefits", "ACA", "coverage", "required benefits", "preventive care"]
+    "tags": [
+      "essential health benefits",
+      "ACA",
+      "coverage",
+      "required benefits",
+      "preventive care"
+    ]
   },
   {
     "id": "supp_costs_explained",
@@ -77,7 +123,14 @@
     "subcategory": "cost_components",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/glossary/",
-    "tags": ["premium", "deductible", "copay", "coinsurance", "out-of-pocket maximum", "costs"]
+    "tags": [
+      "premium",
+      "deductible",
+      "copay",
+      "coinsurance",
+      "out-of-pocket maximum",
+      "costs"
+    ]
   },
   {
     "id": "supp_claims_process",
@@ -87,7 +140,14 @@
     "subcategory": "claims_process",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/claims-appeals/",
-    "tags": ["claims", "filing", "EOB", "appeal", "denial", "process"]
+    "tags": [
+      "claims",
+      "filing",
+      "EOB",
+      "appeal",
+      "denial",
+      "process"
+    ]
   },
   {
     "id": "supp_preventive_care",
@@ -97,7 +157,14 @@
     "subcategory": "free_preventive_services",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/coverage/preventive-care-benefits/",
-    "tags": ["preventive care", "free", "screening", "immunization", "wellness", "no cost"]
+    "tags": [
+      "preventive care",
+      "free",
+      "screening",
+      "immunization",
+      "wellness",
+      "no cost"
+    ]
   },
   {
     "id": "supp_network_types",
@@ -107,7 +174,16 @@
     "subcategory": "network_types",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/choose-a-plan/plan-types/",
-    "tags": ["HMO", "PPO", "EPO", "POS", "network", "in-network", "out-of-network", "referral"]
+    "tags": [
+      "HMO",
+      "PPO",
+      "EPO",
+      "POS",
+      "network",
+      "in-network",
+      "out-of-network",
+      "referral"
+    ]
   },
   {
     "id": "supp_qualification_rules",
@@ -117,7 +193,13 @@
     "subcategory": "lead_scoring",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["qualification", "lead scoring", "sales", "criteria", "questions"]
+    "tags": [
+      "qualification",
+      "lead scoring",
+      "sales",
+      "criteria",
+      "questions"
+    ]
   },
   {
     "id": "supp_objections",
@@ -127,7 +209,15 @@
     "subcategory": "sales_objections",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["objection", "handling", "response", "sales", "cost", "trust", "enrollment"]
+    "tags": [
+      "objection",
+      "handling",
+      "response",
+      "sales",
+      "cost",
+      "trust",
+      "enrollment"
+    ]
   },
   {
     "id": "supp_faq_general",
@@ -137,7 +227,16 @@
     "subcategory": "general_faq",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/quick-guide/",
-    "tags": ["FAQ", "questions", "answers", "basics", "premium", "deductible", "network", "enrollment"]
+    "tags": [
+      "FAQ",
+      "questions",
+      "answers",
+      "basics",
+      "premium",
+      "deductible",
+      "network",
+      "enrollment"
+    ]
   },
   {
     "id": "supp_glossary",
@@ -147,7 +246,12 @@
     "subcategory": "insurance_terms",
     "source": "healthcare.gov",
     "source_url": "https://www.healthcare.gov/glossary/",
-    "tags": ["glossary", "terms", "definitions", "insurance vocabulary"]
+    "tags": [
+      "glossary",
+      "terms",
+      "definitions",
+      "insurance vocabulary"
+    ]
   },
   {
     "id": "supp_compliance",
@@ -157,7 +261,14 @@
     "subcategory": "agent_disclosures",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["compliance", "disclosure", "regulation", "agent", "prohibited", "customer rights"]
+    "tags": [
+      "compliance",
+      "disclosure",
+      "regulation",
+      "agent",
+      "prohibited",
+      "customer rights"
+    ]
   },
   {
     "id": "supp_plan_nova_quantum_shield_2026",
@@ -167,7 +278,14 @@
     "subcategory": "quantum_shield_plan",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["quantum shield", "nova ai plan", "1427 deductible", "ergonomic therapy", "bio-hacking", "188 premium"],
+    "tags": [
+      "quantum shield",
+      "nova ai plan",
+      "1427 deductible",
+      "ergonomic therapy",
+      "bio-hacking",
+      "188 premium"
+    ],
     "country": "usa"
   },
   {
@@ -178,7 +296,14 @@
     "subcategory": "bancassurance",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["pamiliya shield", "bancassurance", "2450 premium", "15000 deductible", "dengue", "pneumonia"],
+    "tags": [
+      "pamiliya shield",
+      "bancassurance",
+      "2450 premium",
+      "15000 deductible",
+      "dengue",
+      "pneumonia"
+    ],
     "country": "philippines"
   },
   {
@@ -189,7 +314,13 @@
     "subcategory": "vul_insurance",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["vul", "wealth builder", "investment", "3500 monthly", "2 million sum assured"],
+    "tags": [
+      "vul",
+      "wealth builder",
+      "investment",
+      "3500 monthly",
+      "2 million sum assured"
+    ],
     "country": "philippines"
   },
   {
@@ -200,7 +331,13 @@
     "subcategory": "taglish_objections",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["mahal", "budget", "objection", "kape comparison", "starter fallback"],
+    "tags": [
+      "mahal",
+      "budget",
+      "objection",
+      "kape comparison",
+      "starter fallback"
+    ],
     "country": "philippines"
   },
   {
@@ -211,7 +348,15 @@
     "subcategory": "vehicle_multifinance",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["otopro", "multifinance", "kendaraan", "angsuran", "dp 15%", "bunga", "tenor"],
+    "tags": [
+      "otopro",
+      "multifinance",
+      "kendaraan",
+      "angsuran",
+      "dp 15%",
+      "bunga",
+      "tenor"
+    ],
     "country": "indonesia"
   },
   {
@@ -222,7 +367,13 @@
     "subcategory": "working_capital",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["modal kerja", "bpkb", "umkm", "50 juta", "tenor fleksibel"],
+    "tags": [
+      "modal kerja",
+      "bpkb",
+      "umkm",
+      "50 juta",
+      "tenor fleksibel"
+    ],
     "country": "indonesia"
   },
   {
@@ -233,7 +384,14 @@
     "subcategory": "bahasa_objections",
     "source": "manual_entry",
     "source_url": null,
-    "tags": ["kemahalan", "bunga mahal", "dp kurang", "objection", "cicilan ringan", "all-risk"],
+    "tags": [
+      "kemahalan",
+      "bunga mahal",
+      "dp kurang",
+      "objection",
+      "cicilan ringan",
+      "all-risk"
+    ],
     "country": "indonesia"
   },
   {
@@ -244,7 +402,14 @@
     "subcategory": "dental_vision",
     "source": "healthcare.gov",
     "source_url": null,
-    "tags": ["dental", "vision", "teeth", "eyes", "adults", "pediatric"]
+    "tags": [
+      "dental",
+      "vision",
+      "teeth",
+      "eyes",
+      "adults",
+      "pediatric"
+    ]
   },
   {
     "id": "health_policy_grace_period",
@@ -254,7 +419,12 @@
     "subcategory": "grace_period",
     "source": "healthcare.gov",
     "source_url": null,
-    "tags": ["grace period", "late payment", "unpaid premium", "termination"]
+    "tags": [
+      "grace period",
+      "late payment",
+      "unpaid premium",
+      "termination"
+    ]
   },
   {
     "id": "health_product_platinum_plus",
@@ -264,7 +434,12 @@
     "subcategory": "platinum",
     "source": "nova_internal_product_docs_2026",
     "source_url": null,
-    "tags": ["platinum", "zero deductible", "copay", "premium"]
+    "tags": [
+      "platinum",
+      "zero deductible",
+      "copay",
+      "premium"
+    ]
   },
   {
     "id": "us_objection_i_am_healthy",
@@ -274,6 +449,29 @@
     "subcategory": "us_objections",
     "source": "nova_us_sales_playbook",
     "source_url": null,
-    "tags": ["healthy", "don't need insurance", "objection", "emergency room"]
+    "tags": [
+      "healthy",
+      "don't need insurance",
+      "objection",
+      "emergency room"
+    ]
+  },
+  {
+    "id": "txt_sample_dental_rider",
+    "title": "Nova Dental Vision Rider Plan",
+    "content": "Nova Dental Vision Rider Plan\n\nThis optional rider can be added to any Bronze, Silver, Gold, or Platinum health insurance plan for an additional $25/month.\n\nKey Benefits:\n- 2 free dental cleanings per year\n- 1 annual vision exam covered at 100%\n- $150 allowance for prescription glasses or contact lenses\n- Emergency dental coverage up to $1,000 per incident\n- Orthodontic coverage for dependents under 19 (50% coinsurance after $500 deductible)\n\nThis rider is ideal for families with children who need regular dental checkups and vision screenings. It can be added during Open Enrollment or within 30 days of a qualifying life event.",
+    "category": "product_plans",
+    "source": "internal_document",
+    "source_url": "sample_dental_rider.txt",
+    "tags": [
+      "deductible",
+      "coinsurance",
+      "coverage",
+      "plan",
+      "bronze",
+      "silver",
+      "gold",
+      "platinum"
+    ]
   }
 ]

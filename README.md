@@ -79,6 +79,33 @@ This automated pipeline instantly executes:
 2. Semantic chunking (by logical sections) and schema validation.
 3. High-speed `all-MiniLM-L6-v2` embedding generation and Pinecone Vector UPSERTing.
 
+### Universal File Ingestor (PDF / TXT / JSON)
+Instead of manually editing `curated_content.json`, you can use our **Universal File Ingestor** to automatically extract text from any PDF, TXT, or JSON file and convert it into properly formatted knowledge base entries.
+
+```bash
+# Ingest a PDF (including tables)
+python knowledge_base/ingest_file.py path/to/policy_handbook.pdf
+
+# Ingest a plain text file
+python knowledge_base/ingest_file.py notes.txt --category coverage
+
+# Ingest a JSON file with custom records
+python knowledge_base/ingest_file.py extra_plans.json --source "partner_document"
+```
+
+**What the ingestor does automatically:**
+| Step | Action |
+|------|--------|
+| **Extract** | Reads text from PDF (including embedded tables via PyMuPDF), TXT, or JSON |
+| **Auto-Title** | Generates a descriptive title from the first meaningful line of content |
+| **Auto-Category** | Detects the best category (e.g., `product_plans`, `coverage`) using keyword analysis |
+| **Auto-Tags** | Extracts relevant keyword tags for enhanced retrieval |
+| **Smart Split** | Long documents (>3000 chars) are split into sections at paragraph boundaries |
+| **Deduplication** | Skips entries with duplicate IDs to prevent data corruption |
+| **Append** | Adds new entries to `curated_content.json` |
+
+After ingesting new files, run `python -m knowledge_base.pipeline` to push the new data to Pinecone so the voice bot can search it immediately.
+
 ### KB Schema & Chunking Strategy
 All records adhere to a strict Pydantic schema (`schema.py`):
 - **`record_id`**: Unique identifier (e.g., `kb_product_001`).
