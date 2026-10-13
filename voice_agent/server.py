@@ -54,11 +54,20 @@ async def startup_event():
 @app.get("/call", response_class=HTMLResponse, tags=["UI"])
 async def serve_web_caller():
     """Serve the clean interactive Web Calling audio application interface."""
-    html_path = Path(__file__).resolve().parent / "web_caller.html"
-    if not html_path.exists():
-        return HTMLResponse(content="<h1>Error: web_caller.html not found in voice_agent directory</h1>", status_code=404)
-    with open(html_path, "r", encoding="utf-8") as f:
-        return HTMLResponse(content=f.read(), status_code=200)
+    candidates = [
+        Path(__file__).resolve().parent / "web_caller.html",
+        project_root / "index.html",
+    ]
+
+    for html_path in candidates:
+        if html_path.exists():
+            with open(html_path, "r", encoding="utf-8") as f:
+                return HTMLResponse(content=f.read(), status_code=200)
+
+    return HTMLResponse(
+        content="<h1>Error: no web UI file was found. Expected voice_agent/web_caller.html or project root index.html.</h1>",
+        status_code=404,
+    )
 
 
 @app.get("/api/config", tags=["UI"])
