@@ -13,7 +13,7 @@ This document is a draft interview prep guide for the Nova AI project. It is des
 **Answer:** Insurance and healthcare questions are sensitive, compliance-heavy, and often require exact policy details. A model that guesses can cause legal or financial risk. The project solves this by grounding answers in a curated knowledge base and forcing tool-based retrieval before responding.
 
 ### Q3. What is the main difference between a normal chatbot and this voice AI platform?
-**Answer:** A normal chatbot works in a text interface and can take time to answer. This system operates in real time over voice calls, must handle ASR noise, multilingual speech, low-latency responses, and policy-grounded answers with tool calls and compliance escalation.
+**Answer:** A normal chatbot works in a text interface and can take time to answer. This system operates in real time over voice calls, must handle ASR noise, spoken turn-taking, low-latency responses, and policy-grounded answers with tool calls and compliance escalation.
 
 ### Q4. How would you describe the business value of this project?
 **Answer:** It reduces human agent workload, improves lead qualification, shortens call time, and increases conversion. At the same time, it protects the business from inaccurate answers and compliance problems by routing uncertain questions to a human specialist.
@@ -35,7 +35,7 @@ This document is a draft interview prep guide for the Nova AI project. It is des
 **Answer:** Vapi orchestrates the conversation, but the backend is where the business-critical logic lives: retrieval, validation, compliance checks, lead capture, and knowledge-base querying. This is the control plane that makes the system reliable and auditable.
 
 ### Q9. What is the role of the frontend in this architecture?
-**Answer:** The frontend acts as the caller UI and streaming dashboard. It triggers the call, captures live transcript frames, and sends them to the nudge engine for compliance and sales signal detection. It also provides the user’s multilingual interface.
+**Answer:** The frontend acts as the caller UI and streaming dashboard. It triggers the call, captures live transcript frames, and sends them to the nudge engine for compliance and sales signal detection. It also provides the user's audio consultation interface.
 
 ### Q10. Why is FastAPI a strong choice here?
 **Answer:** FastAPI is asynchronous, fast, and easy to integrate with Pydantic validation. It is well-suited for webhook triggers, concurrent requests, and real-time voice integrations. It also works naturally with Python ML tooling used in the project.
@@ -133,8 +133,8 @@ This document is a draft interview prep guide for the Nova AI project. It is des
 ### Q37. What are the biggest risks in a real-time nudge engine?
 **Answer:** Noisy audio, ASR errors, outdated context, and token saturation. If the conversation drifts too far, the important signal may fall out of the sliding window and be missed.
 
-### Q38. How do you deal with multilingual voice issues in this project?
-**Answer:** The project uses localized prompts, culturally adapted phrasing, and explicit formatting for numbers and currency. This helps reduce ASR errors and makes TTS more natural in Taglish and Bahasa Indonesian contexts.
+### Q38. How do you deal with voice and ASR transcription issues in this project?
+**Answer:** The project uses conversational prompts, turn-taking bounds, and explicit formatting for numbers and currency. This helps reduce ASR noise errors and makes ElevenLabs TTS sound natural during live phone consultations.
 
 ---
 
@@ -163,16 +163,16 @@ This document is a draft interview prep guide for the Nova AI project. It is des
 ## 7) Product and Engineering Judgment
 
 ### Q45. If you had to improve this system next, what would you change first?
-**Answer:** I would focus on evaluation and observability: better retrieval scoring, logging of every tool call, call-level analytics, and more robust fallback metrics. I would also add automated regression tests around policy retrieval quality and multilingual transcripts.
+**Answer:** I would focus on evaluation and observability: better retrieval scoring, logging of every tool call, call-level analytics, and more robust fallback metrics. I would also add automated regression tests around policy retrieval quality and real-time call transcripts.
 
 ### Q46. Why are retrieval tests important here?
 **Answer:** Because the whole system depends on answering accurate policy questions. Without retrieval validation, the project might appear to work but still fail on factual accuracy.
 
 ### Q47. What makes this project a strong AI engineering portfolio piece?
-**Answer:** It combines multiple advanced AI patterns: RAG, embeddings, vector search, live analytics, multilingual prompts, lower-latency design, and production safety. It is not just a toy demo but an end-to-end applied AI product.
+**Answer:** It combines multiple advanced AI patterns: RAG, embeddings, vector search, live analytics, sub-second nudging, lower-latency design, and production safety. It is not just a toy demo but an end-to-end applied AI product.
 
 ### Q48. How would you explain this project in one sentence to a hiring manager?
-**Answer:** Nova AI is a real-time voice and RAG system that combines policy-grounded retrieval, multilingual voice orchestration, and live compliance nudging to create a safe and scalable insurance advisory assistant.
+**Answer:** Nova AI is a real-time voice and RAG system that combines policy-grounded retrieval, real-time voice orchestration, and live compliance nudging to create a safe and scalable insurance advisory assistant.
 
 ---
 

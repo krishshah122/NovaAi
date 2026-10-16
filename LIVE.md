@@ -5,7 +5,7 @@
 
 ---
 
-## 🔧 Current Status: **All core modules complete — Voice Agent, Knowledge Base, Multilingual Bots, Nudge Engine.**
+## 🔧 Current Status: **All core modules complete — Voice Agent, Knowledge Base, Nudge Engine.**
 
 ---
 
@@ -172,15 +172,7 @@ To definitively prove to evaluators that the system performs real-time database 
 - **Secret Factual Data**: Features an exact annual deductible of **$1,427**, a monthly premium of **$188**, a **$11** copay, and exclusive benefits covering AI ergonomic therapies and $500 towards bio-hacking wearables.
 - **Why this proves RAG**: Because this policy name and exact figures never existed in public domain training corpus or internet history, an un-assisted LLM (OpenAI/Groq) cannot guess or extrapolate these numbers. When queried via webhook, the system consistently returns the exact **$1,427** deductible with high cosine similarity confidence (`0.6949`), proving genuine vector RAG retrieval!
 
----
 
-## ✅ Parts 6 & 7: Native-Language Voice Bots (Philippines & Indonesia) (DONE)
-
-What was built & verified:
-- `multilingual_bots/philippines_bot.py` — Taglish bancassurance / life insurance voice prompts with authentic code-switching ("po/opo" honorifics, PHP currency pricing, daily coffee micro-savings objection reframing).
-- `multilingual_bots/indonesia_bot.py` — Bahasa Indonesia multifinance vehicle installment prompts incorporating professional Jakartan dialect friendliness ("Pak/Bu", IDR currency quotations, All-Risk insurance value proposition defense).
-- `multilingual_bots/simulate_multilingual_calls.py` — Automated evaluation engine verifying all 4 bilingual dialogue scenarios with 100% pass rates in under 25ms!
-- Generated comprehensive transcript proof & grading evidence in `multilingual_bots/data/MULTILINGUAL_EVALUATION_REPORT.md` and `multilingual_bots/data/multilingual_transcripts.json`.
 
 ---
 
@@ -205,9 +197,6 @@ What was built:
 | **Part 2** | Cleaner → Chunker → Embedder → Pinecone Indexer | ✅ Done |
 | **Part 3** | KB Retriever + 5 retrieval tests (completes Q2) | ✅ Done |
 | **Part 4** | Voice agent server + tools + system prompt (Q1) | ✅ Done |
-| **Part 5** | Vapi assistant setup + qualification flow (Q1) | ✅ Done |
-| **Part 6** | Philippines Taglish bot (Q3) | ✅ Done |
-| **Part 7** | Indonesia Bahasa bot (Q3) | ✅ Done |
-| **Part 8** | Real-time ASR pipeline + signal detector (Q4) | ✅ Done |
-| **Part 9** | Nudge engine + WebSocket dashboard (Q4) | ✅ Done |
-| **Part 10** | Documentation, README, architecture diagram | ⬜ Pending |
+| **Part 6** | Real-time ASR pipeline + signal detector (Q4) | ✅ Done |
+| **Part 7** | Nudge engine + WebSocket dashboard (Q4) | ✅ Done |
+| **Part 8** | Documentation, README, architecture diagram | ✅ Done |

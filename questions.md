@@ -54,11 +54,11 @@ Vapi acts as a managed orchestration layer that handles the volatile audio netwo
 
 ## Part 4: Voice AI Challenges & Edge Cases
 
-### Q10: How do you handle "Code-Switching" for Non-English callers (Taglish / Bahasa Indonesia)?
-**Answer:** Multilingual Voice AI is difficult because the ASR (Speech-to-Text) engine is heavily biased toward English. When an Indonesian user says *"Halo Pak, mau tanya asuransi"*, the English ASR might hallucinate phonetically similar English words. 
+### Q10: How do you handle ASR transcription noise and spoken voice nuances in live calls?
+**Answer:** Real-time Voice AI differs from text chatbots because the ASR (Speech-to-Text) engine encounters acoustic noise, speech accents, and phonetic variations. 
 **Our Solution:** 
-1. We modified the System Prompts to force the LLM to output culturally localized responses (using connectors like "po/opo" for Philippines or "Pak/Bu" for Indonesia). 
-2. Crucially, we instructed the LLM to output cleanly formatted, fully spelled-out text (e.g., spelling out numbers as words instead of digits). This is because the ElevenLabs TTS engine pronounces spelled-out phonetic words much more accurately in foreign accents than it pronounces raw integers.
+1. We engineered the System Prompt to enforce concise, conversational spoken phrasing (under 2-3 sentences per turn) and to be lenient with phonetic misspellings when evaluating tool parameters.
+2. Crucially, we instructed the LLM to output cleanly formatted, spoken-word friendly text (e.g., spelling out dollar ranges and numbers clearly instead of complex tables). This ensures the ElevenLabs TTS engine synthesizes natural conversational voice without synthetic robotic artifacts.
 
 ### Q11: How do you ensure the AI never hallucinates illegal medical or financial advice?
 **Answer:** We enforce **Zero-Hallucination Compliance** through a multi-layered approach:

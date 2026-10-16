@@ -93,12 +93,12 @@ async def get_client_config():
 
 
 @app.api_route("/api/switch_assistant", methods=["GET", "POST"], tags=["UI"])
-async def switch_assistant_region(request: Request, region: str = "us"):
-    """Dynamically switch Vapi Cloud Assistant persona, language prompt, and tools between US, PH, and ID."""
+@app.api_route("/api/sync_assistant", methods=["GET", "POST"], tags=["UI"])
+async def sync_assistant_config(request: Request, region: str = "us"):
+    """Synchronize Vapi Cloud Assistant persona, prompt, and RAG tools for Nova US Health Advisor."""
     import requests, os
     from voice_agent.prompts import LEAD_QUALIFICATION_SYSTEM_PROMPT
-    from multilingual_bots.philippines_bot import PHILIPPINES_TAGLISH_PROMPT
-    from multilingual_bots.indonesia_bot import INDONESIA_BAHASA_PROMPT
+    from voice_agent.rag_tool import VAPI_TOOLS_DEFINITIONS
     
     api_key = os.getenv("VAPI_API_KEY")
     asst_id = os.getenv("VAPI_ASSISTANT_ID")
@@ -119,7 +119,6 @@ async def switch_assistant_region(request: Request, region: str = "us"):
         return {"success": False, "error": f"Vapi API connection failed: {str(e)}"}
 
     model = cur.get("model", {})
-    from voice_agent.rag_tool import VAPI_TOOLS_DEFINITIONS
     
     tools_def = []
     for tool in VAPI_TOOLS_DEFINITIONS:
@@ -130,33 +129,22 @@ async def switch_assistant_region(request: Request, region: str = "us"):
         })
     model["tools"] = tools_def
 
+    bot_name = "Nova US Health Advisor"
+    model["messages"] = [{"role": "system", "content": LEAD_QUALIFICATION_SYSTEM_PROMPT}]
+    voice = cur.get("voice", {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM"})
     first_msg = "Hi there! I'm Nova, your health insurance advisor. What can I help you with today?"
-    if region.lower() == "ph":
-        bot_name = "Nova PH Taglish Bot"
-        model["messages"] = [{"role": "system", "content": PHILIPPINES_TAGLISH_PROMPT}]
-        voice = {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM", "stability": 0.55, "similarityBoost": 0.8}
-        first_msg = "Kumusta! Ako si Nova, ang inyong health insurance advisor. Paano kita matutulungan ngayon?"
-    elif region.lower() == "id":
-        bot_name = "Nova ID Bahasa Bot"
-        model["messages"] = [{"role": "system", "content": INDONESIA_BAHASA_PROMPT}]
-        voice = {"provider": "11labs", "voiceId": "VR6AewLTigWG4xSOukaG", "stability": 0.60, "similarityBoost": 0.85}
-        first_msg = "Halo! Saya Nova, penasihat asuransi kesehatan Anda. Ada yang bisa saya bantu hari ini?"
-    else:
-        bot_name = "Nova US Health Advisor"
-        model["messages"] = [{"role": "system", "content": LEAD_QUALIFICATION_SYSTEM_PROMPT}]
-        voice = cur.get("voice", {"provider": "11labs", "voiceId": "21m00Tcm4TlvDq8ikWAM"})
-        region = "us"
 
     payload = {"name": bot_name, "model": model, "voice": voice, "firstMessage": first_msg}
     try:
         p = requests.patch(f"https://api.vapi.ai/assistant/{asst_id}", json=payload, headers=headers, timeout=10)
         if p.status_code == 200:
-            print(f"   -> 🌐 Switched live cloud voice bot to: [{bot_name}]")
-            return {"success": True, "region": region, "bot_name": bot_name}
+            print(f"   -> 🌐 Configured live cloud voice bot: [{bot_name}]")
+            return {"success": True, "region": "us", "bot_name": bot_name}
         else:
             return {"success": False, "error": f"Vapi returned {p.status_code}: {p.text}"}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
 
 
 class NudgeRequest(BaseModel):

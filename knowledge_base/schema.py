@@ -88,7 +88,7 @@ class KBRecord(BaseModel):
     )
     country: str = Field(
         default="usa",
-        description="Target market country or dialect region (usa / philippines / indonesia)"
+        description="Target market country (usa)"
     )
     created_at: str = Field(
         default_factory=lambda: datetime.utcnow().isoformat(),

@@ -65,7 +65,7 @@ To permanently resolve this, the architecture was migrated to `fastembed`, utili
 
 ### 4. Knowledge Base (`pinecone`)
 - Populated by `cleaner.py` and `indexer.py`.
-- Stores strictly curated, public-domain health and multifinance policies encoded into dense vectors using `all-MiniLM-L6-v2`.
+- Stores strictly curated, public-domain health insurance policies encoded into dense vectors using `all-MiniLM-L6-v2`.
 
 ### 5. Groq Nudge Engine (`nudge_engine.py`)
 - Powered by `llama-3.3-70b-versatile` for ultra-low latency (< 600ms).

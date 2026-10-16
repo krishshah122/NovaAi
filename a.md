@@ -124,12 +124,12 @@
   * **Strict System Prompt Guardrails**: System instructions explicitly command the agent: *"NEVER provide legal advice, medical diagnoses, or guarantee unverified rates."*
   * **Deterministic Fallback & Human Escalation**: If Pinecone returns no relevant context (similarity score < threshold), the agent triggers a compliance fallback script: *"I don't have exact details on that policy clause, let me transfer you to a licensed specialist."* It then fires `submit_lead_to_crm` with `status="escalation_required"`.
 
-### Q3.3: How did you handle Multilingual calls (e.g., Taglish and Bahasa Indonesia)?
-* **Recruiter Intent**: Evaluates internationalization (i18n), localization, and handling cross-cultural speech code-switching.
+### Q3.3: How did you handle speech naturalness and voice ASR quirks?
+* **Recruiter Intent**: Evaluates voice engineering nuances, ASR noise tolerance, and real-time TTS latency optimizations.
 * **Master Answer**:
-  * **Code-Switching Adaptation**: Taglish (Tagalog + English) and Indonesian mixed dialects often break standard ASR. Deepgram Nova-2 is configured with language hints to prevent mistranscribing code-switched phrases.
-  * **Cultural Prompting & Connectors**: System prompts are conditioned with local conversational markers (e.g., using *"Po / Opo"* for Philippine respect, and *"Pak / Bu"* for Indonesian formal address).
-  * **Phonetic Output Normalization**: Standard ASR engines can stumble over numbers in foreign contexts. The LLM is instructed to spell out numerical digits and currency explicitly (e.g., *"lima puluh ribu rupiah"*) so that TTS engines (ElevenLabs) pronounce them accurately without synthetic glitching.
+  * **Turn-Taking & Short Turn Bounds**: Voice bots fail if they speak like textbooks. The system prompt restricts outputs to 2-3 spoken sentences with conversational pauses, avoiding information overload.
+  * **Phonetic Misspelling Resilience**: Voice transcripts frequently mishear proper nouns or terms. System instructions require lenient phonetic matching when evaluating policy search parameters rather than rejecting queries on minor spelling variations.
+  * **TTS Number & Currency Normalization**: Rather than returning complex tables or dense digit strings that break TTS prosody, the LLM normalizes numbers into clean spoken phrases for ElevenLabs to voice naturally.
 
 ---
 

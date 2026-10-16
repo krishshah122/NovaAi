@@ -49,12 +49,12 @@ We refactored the embedder to use `fastembed`, which runs the exact same `all-Mi
 **Engineer:** In a live call environment, if a nudge takes 3 seconds to generate, the conversation has already moved on. We built the Nudge Engine using the `llama-3.3-70b-versatile` model hosted on **Groq**. Groq utilizes specialized LPU (Language Processing Unit) hardware rather than traditional GPUs. 
 By sending a tightly constrained sliding window (only the last 6 messages) to Groq and requesting a strict JSON object output, we achieve complete semantic extraction in **under 600 milliseconds**. This allows the UI to flash "Frustration Detected" almost instantly without relying on brittle regex keyword matching.
 
-**Interviewer: What steps did you take to handle Multilingual calls like Taglish and Bahasa Indonesia?**
+**Interviewer: What steps did you take to handle spoken-word naturalness and ASR transcription challenges?**
 
-**Engineer:** Non-English Voice AI is notoriously difficult due to ASR hallucination and poor code-switching (mixing languages). 
-- For **Taglish (Philippines)**, we explicitly instructed the LLM in the system prompt to use local conversational connectors ("po/opo") and framed concepts locally (e.g., comparing premiums to the "cost of a daily coffee"). 
-- For **Bahasa Indonesia**, we used specific honorifics ("Pak / Bu") and Jakarta-centric finance terminology.
-- To prevent the English-biased Deepgram ASR from mistranscribing foreign words (like mistaking "Halo Budi" for "Hello Buddhists"), we instructed the LLM to output cleanly formatted, fully spelled-out numbers and punctuation, which helps the ElevenLabs TTS engine pronounce the foreign text much more naturally.
+**Engineer:** Live Voice AI differs substantially from text chat because ASR (Speech-to-Text) must handle audio interruptions, ambient noise, and phonetic ambiguity:
+- **Spoken Conciseness:** Text LLMs tend to generate long paragraphs with bullet points. In system prompts, we strictly enforce short responses (2-3 sentences max) so the caller never feels talked over.
+- **Phonetic Fault Tolerance:** Voice transcripts frequently spell brand names or terms slightly wrong (e.g. "Darwin's" or "Novas"). The prompt commands the agent to be lenient with voice phonetic misspellings when evaluating tool parameters.
+- **TTS Number & Currency Formatting:** To prevent synthetic glitches where TTS reads numbers as awkward digit strings, the LLM is instructed to format numbers into clean, spoken English phrases (e.g., "$150 a month" rather than raw nested rate tables).
 
 ---
 

@@ -97,5 +97,27 @@
     "consultation_notes": "Standard voice consultation",
     "status": "REQUIRES_HUMAN_ESCALATION",
     "assigned_agent": "Human Onboarding Specialist"
+  },
+  {
+    "lead_id": "lead_0960f487",
+    "timestamp": "2026-10-16T15:55:03.069112",
+    "caller_name": "Dr. Ramesh Patil",
+    "contact_info": "+91-9876543210",
+    "household_size": 4,
+    "interested_plan_type": "Gold Family Floater / SEP",
+    "consultation_notes": "Caller requested special coverage exception and asked for immediate licensed human consultation.",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
+  },
+  {
+    "lead_id": "lead_7a2e458e",
+    "timestamp": "2026-10-16T16:01:20.672726",
+    "caller_name": "Dr. Ramesh Patil",
+    "contact_info": "+91-9876543210",
+    "household_size": 4,
+    "interested_plan_type": "Gold Family Floater / SEP",
+    "consultation_notes": "Caller requested special coverage exception and asked for immediate licensed human consultation.",
+    "status": "REQUIRES_HUMAN_ESCALATION",
+    "assigned_agent": "Human Onboarding Specialist"
   }
 ]

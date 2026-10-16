@@ -1,11 +1,11 @@
 # Nova AI — Real-Time Voice Agent & RAG Platform
 
-An end-to-end, production-grade Voice AI platform that bridges Vapi.ai's conversational web orchestrator with a high-accuracy Pinecone Vector RAG database and a sub-second Groq Nudge Engine. Built to demonstrate enterprise-level voice assistant architecture with zero-hallucination compliance, multilingual support, and real-time agent assist.
+An end-to-end, production-grade Voice AI platform that bridges Vapi.ai's conversational web orchestrator with a high-accuracy Pinecone Vector RAG database and a sub-second Groq Nudge Engine. Built to demonstrate enterprise-level voice assistant architecture with zero-hallucination compliance, automated lead qualification, and real-time agent assist.
 
 ---
 
 ## 🏛️ Overall System Flow
-1. **The User Interface:** A user accesses the Web Caller UI (`web_caller.html`) and selects a region (US English, Philippines, or Indonesia).
+1. **The User Interface:** A user accesses the Web Caller UI (`index.html`) to start a live voice consultation with the Nova Health Insurance Advisor.
 2. **Voice Orchestration:** The browser initiates a WebRTC connection to **Vapi.ai**. Vapi handles raw audio streaming, passing the audio to Deepgram (ASR) for transcription, sending transcripts to the core LLM for logic, and synthesizing the response via ElevenLabs (TTS).
 3. **RAG Integration:** If the user asks a factual policy question, Vapi suspends generation and fires a Webhook to our **FastAPI Backend** (`server.py`). 
 4. **Vector Retrieval:** The backend processes the webhook, executes `query_knowledge_base`, and searches **Pinecone** to retrieve precise data (e.g., deductible amounts) before returning it to Vapi to read aloud.
@@ -30,9 +30,8 @@ An end-to-end, production-grade Voice AI platform that bridges Vapi.ai's convers
 
 | Module | Description | Key Files |
 |--------|-------------|-----------|
-| **Voice Agent** | Vapi-connected voice bot with lead qualification, strict RAG grounding, and human escalation | `voice_agent/`, `web_caller.html` |
+| **Voice Agent** | Vapi-connected voice bot with lead qualification, strict RAG grounding, and human escalation | `voice_agent/`, `index.html` |
 | **Knowledge Base** | Production-ready data pipeline — scraping, cleaning, chunking, embedding, and Pinecone indexing | `knowledge_base/`, `RETRIEVAL_TESTS.md` |
-| **Multilingual Bots** | Taglish (Philippines) and Bahasa Indonesia voice bots with cultural code-switching and local honorifics | `multilingual_bots/` |
 | **Live Nudge Engine** | Groq Llama-3 stream analyzer detecting compliance, frustration, and cross-sell signals in <600ms | `voice_agent/nudge_engine.py` |
 
 ---
@@ -60,8 +59,7 @@ pip install -r requirements.txt
 python -m voice_agent.server
 ```
 
-Open a web browser and navigate to `http://localhost:8000/call`.
-You can toggle between US English, Taglish, and Bahasa Indonesia instantly via the UI tabs!
+Open a web browser and navigate to `http://localhost:8000/call` to launch the live voice consultation interface!
 
 ---
 
@@ -120,16 +118,15 @@ We have compiled test queries, complete with their retrieved chunks, citations, 
 
 ---
 
-## 🌎 Multilingual Support & Compromises
+## 🎙️ Speech-to-Text & Spoken Voice Optimization
 
 ### ASR (Speech-to-Text) Behavior
-Vapi relies heavily on Deepgram Nova-2. While Nova-2 is world-class for English, it struggles natively with heavy regional accents or rapid code-switching without explicit configuration. 
-- **The Challenge:** When testing the Indonesian bot, saying *"Halo Budi"* was sometimes mistranscribed as *"Hello, Buddhists"* by the English-first model.
-- **Our Solution:** We modified the System Prompt to output strictly formatted, punctuation-clean numbers and words (e.g., spelling out *"dua juta"* instead of *2.000.000*) to aid the TTS engine in recovering gracefully from bad ASR transcripts. 
+Vapi relies heavily on Deepgram Nova-2. While Nova-2 is world-class for conversational English, background noise, accents, or spoken numbers can occasionally produce phonetic transcription variations.
+- **Our Solution:** We modified the System Prompt to output strictly formatted, spoken-word friendly responses (e.g., spelling out numbers and financial ranges clearly) to aid the TTS engine in pronouncing policy details cleanly without synthetic speech glitches.
 
-### TTS (Text-to-Speech) Compromises
-- **Taglish:** AI providers do not have a dedicated "Taglish" model. We forced it to sound authentic by using a generic multicultural voice and strictly prompting the LLM to use heavy Filipino conversational connectors (*"po/opo", "sir/ma'am"*) and micro-savings framing (*"cost of a daily coffee"*).
-- **Bahasa Indonesia:** We configured the AI to use local honorifics (*"Pak / Bu"*) and regional Jakarta finance terms (*"DP", "Angsuran", "Tenor"*) to avoid sounding like a robotic literal translation.
+### TTS (Text-to-Speech) Naturalness
+- The agent personality is voiced by ElevenLabs (`21m00Tcm4TlvDq8ikWAM`), optimized with balanced stability and similarity boost to sound warm, empathetic, and professional throughout insurance consultations.
+- Prompts enforce short conversational responses (2-3 sentences maximum per turn) to avoid overwhelming callers over a phone or WebRTC audio channel.
 
 ---
 
