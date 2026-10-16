@@ -74,6 +74,182 @@ This document is a draft interview prep guide for the Nova AI project. It is des
 ### Q20. How do you handle PII before indexing data?
 **Answer:** The cleaner removes or masks phone numbers, emails, SSNs, and other sensitive patterns using regex. This prevents sensitive personal data from being embedded or sent to third-party services.
 
+---
+
+### 🔍 Deep Dive: How Regex, MD5 Hashing, and Jaccard Similarity Work in the Data Pipeline
+
+The `cleaner.py` module uses three distinct techniques to protect data and eliminate duplicates. Below is an in-depth walkthrough of each technique, how it works internally, and the order they execute.
+
+#### Technique 1: Regex (Regular Expressions) — PII Detection & Redaction
+
+Regex is a pattern-matching language built into Python. The cleaner defines four regex patterns to find and replace sensitive personal information before any text reaches the embedding or indexing stages.
+
+**The Four PII Patterns Used:**
+
+| PII Type | Regex Pattern | What It Detects | Example Match |
+|----------|--------------|-----------------|---------------|
+| Email | `\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z\|a-z]{2,7}\b` | Any email address format | `john.doe@example.com` |
+| Phone | `\b(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})\b` | US phone numbers in any format (parentheses, dashes, dots, spaces) | `(800) 555-0199`, `800.555.0199`, `+1-800-555-0199` |
+| SSN | `\b\d{3}[- ]?\d{2}[- ]?\d{4}\b` | Social Security Numbers with or without separators | `123-45-6789`, `123 45 6789`, `123456789` |
+| Credit Card | `\b(?:\d[ -]*?){13,16}\b` | 13 to 16 digit card numbers with optional separators | `4111-2222-3333-4444` |
+
+**How a Regex Pattern Works (SSN Example Breakdown):**
+
+```
+Pattern:  \b\d{3}[- ]?\d{2}[- ]?\d{4}\b
+
+Symbol-by-symbol:
+  \b      →  Word boundary (match must start/end at a word edge, not mid-word)
+  \d{3}   →  Exactly 3 digits (0-9)
+  [- ]?   →  Optionally one dash or one space (the ? means "0 or 1 times")
+  \d{2}   →  Exactly 2 digits
+  [- ]?   →  Optionally one dash or one space
+  \d{4}   →  Exactly 4 digits
+  \b      →  Word boundary
+
+Result: Matches "123-45-6789", "123 45 6789", and "123456789"
+        Does NOT match "12345" (too short) or "hello" (not digits)
+```
+
+**What Happens When a Match Is Found:**
+
+```
+Input:    "Call me at 800-555-0199 about my Gold plan policy"
+Process:  PHONE regex matches "800-555-0199"
+          pattern.sub("[PII_REDACTED_PHONE]", text) replaces it
+Output:   "Call me at [PII_REDACTED_PHONE] about my Gold plan policy"
+```
+
+The method returns a tuple: `(redacted_text, had_pii)` — the boolean flag is stored in the record's `pii_flag` field so auditors know which records originally contained sensitive data.
+
+**Credit Card False-Positive Protection:**  
+The cleaner includes an extra safety check for credit cards. Since the broad pattern `(?:\d[ -]*?){13,16}` could accidentally match short numbers like years (2024), it strips all non-digit characters and only flags the match if the clean digit count is genuinely between 13 and 16.
+
+---
+
+#### Technique 2: MD5 Hashing — Exact Duplicate Detection
+
+MD5 (Message Digest Algorithm 5) is a one-way hash function that converts any input text into a fixed 32-character hexadecimal fingerprint. The same input always produces the same output, but different inputs produce different outputs.
+
+**The Formula Used:**
+
+```python
+text_hash = hashlib.md5(text.strip().lower().encode('utf-8')).hexdigest()
+```
+
+**Step-by-Step Breakdown:**
+
+```
+Input:      "Bronze plans have LOW premiums  "
+
+Step 1 — .strip()         →  "Bronze plans have LOW premiums"     (removes trailing spaces)
+Step 2 — .lower()         →  "bronze plans have low premiums"     (case-insensitive comparison)
+Step 3 — .encode('utf-8') →  b'bronze plans have low premiums'    (converts string to bytes)
+Step 4 — hashlib.md5(...) →  applies the MD5 algorithm internally
+Step 5 — .hexdigest()     →  "a3f2b8c9e1d4f7a2b3c8d9e0f1a2b3c4"  (32-char unique fingerprint)
+```
+
+**How Duplicate Detection Works:**
+
+The cleaner maintains a `seen_hashes` set. For each new record:
+
+```
+Record 1: "Bronze plans have low premiums"  →  hash: "a3f2b8c9..."
+          Check: Is "a3f2b8c9..." in seen_hashes?  NO → Add to set, KEEP record ✅
+
+Record 2: "Silver plans have mid premiums"  →  hash: "f7e1d2a0..."
+          Check: Is "f7e1d2a0..." in seen_hashes?  NO → Add to set, KEEP record ✅
+
+Record 3: "Bronze plans have low premiums"  →  hash: "a3f2b8c9..."  (same as Record 1!)
+          Check: Is "a3f2b8c9..." in seen_hashes?  YES → SKIP record 🚫 (exact duplicate)
+```
+
+**Why MD5 and Not Direct String Comparison?**  
+Comparing full text strings is expensive for large documents. MD5 reduces any text (even a 10,000-word document) to a fixed 32-character fingerprint, making comparison instant regardless of document size. It also provides a clean way to store "seen" records in a memory-efficient set.
+
+---
+
+#### Technique 3: Jaccard Similarity — Near-Duplicate Detection
+
+MD5 only catches exact duplicates. If someone slightly rewords a record ("Bronze plans have lower premiums" vs. "Bronze plans feature low premiums"), the MD5 hashes will be completely different. Jaccard similarity solves this by measuring how much word overlap two texts share.
+
+**The Formula:**
+
+```
+Jaccard Similarity = |A ∩ B| / |A ∪ B|
+
+Where:
+  A = set of unique words in Text A
+  B = set of unique words in Text B
+  A ∩ B = words that appear in BOTH texts (intersection)
+  A ∪ B = all unique words from BOTH texts combined (union)
+```
+
+**Worked Example:**
+
+```
+Text A: "bronze plans have low premiums"
+Text B: "bronze plans feature low premiums"
+
+Word Set A: {bronze, plans, have, low, premiums}         → 5 unique words
+Word Set B: {bronze, plans, feature, low, premiums}       → 5 unique words
+
+Intersection (A ∩ B): {bronze, plans, low, premiums}      → 4 shared words
+Union (A ∪ B): {bronze, plans, have, feature, low, premiums} → 6 total unique words
+
+Jaccard = 4 / 6 = 0.667 (66.7% similar)
+```
+
+**The Threshold:**  
+The cleaner uses a threshold of `0.85` (85%). If Jaccard similarity between a new record and any previously accepted record is ≥ 85%, the new record is considered a near-duplicate and is skipped. In the example above, 66.7% is below 85%, so both records would be kept.
+
+**A Near-Duplicate Example That Would Be Caught:**
+
+```
+Text A: "The bronze plan has lower monthly premiums but higher deductibles when you need care"
+Text B: "The bronze plan has lower monthly premiums but higher deductibles when you get care"
+
+Only one word differs ("need" vs "get"), so Jaccard ≈ 0.93 (93%)
+93% ≥ 85% threshold → Text B is SKIPPED as a near-duplicate 🚫
+```
+
+**Performance Note:**  
+Each new record is compared against ALL previously accepted records. For Record N, the cleaner runs N-1 Jaccard comparisons. This is acceptable because the knowledge base typically has dozens of records (not millions). At enterprise scale, techniques like MinHash or SimHash would replace brute-force Jaccard.
+
+---
+
+#### Processing Order and Why It Matters
+
+The cleaner executes all three techniques in a specific order on every record. This order is intentional for efficiency:
+
+```
+For each record in the input list:
+│
+├─ Step 1: NORMALIZE TEXT (fix whitespace, standardize terms)
+│   Always runs. Ensures consistent comparison for all subsequent steps.
+│
+├─ Step 2: MD5 HASH CHECK (exact duplicate?)
+│   Instant O(1) lookup in the hash set.
+│   If duplicate → SKIP immediately (no further processing)
+│
+├─ Step 3: JACCARD SIMILARITY CHECK (near-duplicate?)
+│   More expensive: compares word sets against every previous record.
+│   Only runs if MD5 passed (no point doing expensive check on exact dupes).
+│   If near-duplicate (≥ 85%) → SKIP immediately
+│
+└─ Step 4: REGEX PII SCAN (all 4 patterns)
+    Only runs if the record survived both dedup checks.
+    No point redacting PII in a record that will be thrown away.
+    Scans all 4 patterns (Email, Phone, SSN, Credit Card).
+    Replaces matches with [PII_REDACTED_TYPE] tags.
+    Sets pii_flag = True on the record.
+```
+
+**Why cheapest checks first?**  
+MD5 hashing is nearly instantaneous (O(1) set lookup). Jaccard requires iterating over word sets of every previously accepted record. Regex scanning requires multiple pattern passes over the full text. By putting MD5 first, exact duplicates are eliminated before any expensive computation runs.
+
+---
+
 ### Q21. Why is a local backup like vector_store.json useful?
 **Answer:** It acts as a fallback in case Pinecone is unavailable or slow. In production, this helps maintain continuity and resilience without dropping the whole service.
 
