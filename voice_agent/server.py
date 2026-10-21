@@ -1,23 +1,16 @@
-"""
-FastAPI Voice Agent Webhook Server
-Handles incoming Vapi.ai real-time voice tool call webhooks, bridging phone conversations directly to our
-Pinecone vector database and enterprise Mock CRM lead storage with sub-200ms processing latency.
-"""
-
 import sys
+from contextlib import asynccontextmanager
 import json
-
-if hasattr(sys.stdout, 'reconfigure'):
-    sys.stdout.reconfigure(encoding='utf-8')
-
-from fastapi import FastAPI, Request, HTTPException, status
+import logging
+import time
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any
 from pydantic import BaseModel
-
+from datetime import datetime as dt
 # Ensure project root in path
 project_root = Path(__file__).resolve().parents[1]
 if str(project_root) not in sys.path:
@@ -39,16 +32,47 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[SYSTEM] Pre-loading FastEmbed ONNX model into RAM...")
 
-@app.on_event("startup")
-async def startup_event():
-    print("[SYSTEM] Pre-loading lightweight fastembed ONNX models into RAM...")
     from voice_agent.rag_tool import get_retriever
+
     try:
         get_retriever().embedder._load_model()
-        print("[SYSTEM] AI Models successfully pre-loaded and ready for instant retrieval.")
+        print("[SYSTEM] AI model successfully pre-loaded.")
     except Exception as e:
-        print(f"[SYSTEM ERROR] Failed to pre-load AI models: {e}")
+        print(f"[SYSTEM ERROR] Failed to pre-load AI model: {e}")
+
+    yield
+
+    print("[SYSTEM] FastAPI application is shutting down.")
+
+
+app = FastAPI(lifespan=lifespan)
+logger = logging.getLogger(__name__)
+
+
+@app.middleware("http")
+async def measure_request_latency(request: Request, call_next):
+    """Expose and log total backend request duration, including webhook tool execution."""
+    start_time = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception:
+        logger.exception("Request failed: %s %s", request.method, request.url.path)
+        raise
+
+    elapsed_ms = (time.perf_counter() - start_time) * 1000
+    response.headers["Server-Timing"] = f"app;dur={elapsed_ms:.2f}"
+    logger.info(
+        "Request timing method=%s path=%s status=%s duration_ms=%.2f",
+        request.method,
+        request.url.path,
+        response.status_code,
+        elapsed_ms,
+    )
+    return response
 
 
 @app.get("/call", response_class=HTMLResponse, tags=["UI"])
@@ -93,7 +117,6 @@ async def get_client_config():
 
 
 @app.api_route("/api/switch_assistant", methods=["GET", "POST"], tags=["UI"])
-@app.api_route("/api/sync_assistant", methods=["GET", "POST"], tags=["UI"])
 async def sync_assistant_config(request: Request, region: str = "us"):
     """Synchronize Vapi Cloud Assistant persona, prompt, and RAG tools for Nova US Health Advisor."""
     import requests, os
@@ -230,9 +253,6 @@ async def vapi_webhook_handler(request: Request):
     Primary real-time Vapi Tool Calling webhook receiver.
     Supports both legacy single functionCall payloads and modern toolCallList array structures.
     """
-    import traceback
-    from datetime import datetime as dt
-
     log_file = Path(__file__).resolve().parent / "data" / "webhook_debug.log"
     log_file.parent.mkdir(parents=True, exist_ok=True)
 

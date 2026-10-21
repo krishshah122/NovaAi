@@ -114,7 +114,36 @@ All records adhere to a strict Pydantic schema (`schema.py`):
 **Chunking:** We use logical document chunking (by section/product) rather than arbitrary token counts (like LangChain's 500-token splitter). This ensures that the LLM receives the entire context of a specific insurance product in a single coherent chunk, preventing deductibles from being separated from premiums across two different chunks.
 
 ### How to Test Retrieval
-We have compiled test queries, complete with their retrieved chunks, citations, and accuracy verdicts, in the **[RETRIEVAL_TESTS.md](RETRIEVAL_TESTS.md)** file included in this repository.
+Run the retrieval evaluation from the repository root:
+
+```bash
+python -m knowledge_base.test_retrieval
+```
+
+The evaluator in `knowledge_base/test_retrieval.py` runs five fixed policy questions against `HybridRetriever`. It checks whether the expected record ID is ranked first or appears in the top two, and whether the top result's citation has the expected source (and expected source URL where configured). It reports **top-1 accuracy**, **Recall@2**, and **citation accuracy**, then saves the individual results and summary to `knowledge_base/data/processed/retrieval_evaluation_report.json`.
+
+These are retrieval and citation checks, not a measurement of whether a generated voice answer is factually correct. Keep the expected IDs and sources aligned with reviewed knowledge-base records; this small five-query suite is a regression check, not a production accuracy guarantee. `RETRIEVAL_TESTS.md` contains an earlier example run; use the generated JSON report for current results.
+
+### Backend Latency Measurement
+
+Latency is measured at two backend layers:
+
+| Measurement | Implementation |
+|---|---|
+| Per-query retrieval time | `knowledge_base/retriever.py`, `HybridRetriever.query`: logs embedding, search, and total durations using `time.perf_counter()`. |
+| Cold/warm retrieval benchmark | `knowledge_base/test_retrieval.py`: times each fixed query, reports the first query separately, then warm-query median and p95. The first query includes lazy model loading in a fresh process. |
+| Full FastAPI request time | `voice_agent/server.py`, `measure_request_latency` middleware: records request duration and returns it in the `Server-Timing: app;dur=...` response header. This includes backend work for the request, including webhook tool execution. |
+
+Start the server, then inspect a measured response header:
+
+```bash
+python -m voice_agent.server
+curl -i http://localhost:8000/health
+```
+
+For a tool-webhook measurement, send a representative Vapi tool-call payload to `POST /webhook/vapi` and inspect its `Server-Timing` response header. Compare multiple calls, separating the first/cold call from warm calls; use median and p95 rather than relying on one request. The retrieval report measures `HybridRetriever.query`; the HTTP header measures the complete backend request.
+
+**Scope limitation:** Neither measurement includes the full caller-to-first-audio path through Vapi, speech recognition, LLM generation, and speech synthesis. That end-to-end voice latency must be measured from Vapi call timing/telemetry or synchronized timestamps for caller-utterance completion and assistant-audio start. Do not present the backend timings as overall voice-system latency.
 
 ---
 

@@ -8,6 +8,8 @@ import os
 import sys
 import json
 import math
+import logging
+import time
 from typing import List, Dict, Optional, Any
 from pathlib import Path
 
@@ -32,6 +34,8 @@ from knowledge_base.schema import (
     KBRecord, KBQueryResult, KBQueryRequest, KBCategory, KBSource
 )
 from knowledge_base.embedder import VectorEmbedder
+
+logger = logging.getLogger(__name__)
 
 
 class HybridRetriever:
@@ -167,6 +171,8 @@ class HybridRetriever:
         Execute similarity retrieval search for an incoming question.
         Returns sorted List of validated KBQueryResult items with citations.
         """
+        query_start = time.perf_counter()
+        embedding_start = query_start
         self.embedder._load_model()
         if not self.embedder.model:
             print("[ERROR] No embedding model loaded. Cannot execute vector search.")
@@ -175,11 +181,14 @@ class HybridRetriever:
         # 1. Generate dense vector embedding for query question
         vectors_generator = self.embedder.model.embed([request.question])
         query_vector = next(vectors_generator).tolist()
+        embedding_ms = (time.perf_counter() - embedding_start) * 1000
 
         matches_data = []
+        backend = "local"
         category_filter_str = request.category_filter.value if request.category_filter else None
 
         # 2. Try Cloud Pinecone Index Query First
+        search_start = time.perf_counter()
         if self.index:
             try:
                 filter_dict = {"category": category_filter_str} if category_filter_str else None
@@ -191,6 +200,8 @@ class HybridRetriever:
                     filter=filter_dict
                 )
                 matches_data = resp.get("matches", [])
+                if matches_data:
+                    backend = "pinecone"
             except Exception as e:
                 print(f"[WARNING] Pinecone live query error: {e}. Switching to offline local vector search.")
                 matches_data = []
@@ -198,6 +209,7 @@ class HybridRetriever:
         # 3. Fallback to offline local vector store if Cloud failed or empty
         if not matches_data:
             matches_data = self._search_local_fallback(query_vector, request.top_k, category_filter_str)
+        search_ms = (time.perf_counter() - search_start) * 1000
 
         # 4. Filter by minimum confidence score and construct output results
         results: List[KBQueryResult] = []
@@ -225,6 +237,13 @@ class HybridRetriever:
             ))
 
         print(f"[RETRIEVER] Query: '{request.question}' -> Found {len(results)} qualifying chunks (min_score={request.min_score})")
+        logger.info(
+            "Retrieval timing embedding_ms=%.2f search_ms=%.2f total_ms=%.2f backend=%s",
+            embedding_ms,
+            search_ms,
+            (time.perf_counter() - query_start) * 1000,
+            backend,
+        )
         return results
 
     def format_context_for_rag(self, results: List[KBQueryResult]) -> str:

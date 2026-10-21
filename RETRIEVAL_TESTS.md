@@ -1,4 +1,6 @@
-# Retrieval Testing Results
+# Historical Retrieval Test Example
+
+This document preserves an earlier five-query example run; it is not a live report and the referenced generated JSON report may not be present. To run the current evaluator and create up-to-date evidence, use `python -m knowledge_base.test_retrieval`. The current evaluator checks expected record IDs, top-1/Recall@2, citations, and retrieval latency.
 
 We executed the `knowledge_base/test_retrieval.py` script against the newly ingested Pinecone vector database. The following 5 queries successfully demonstrated reliable retrieval across different semantic categories: **Product, Policy, Qualification, FAQ, and Objection Handling.**
 
@@ -81,5 +83,4 @@ Below are the exact automated test results extracted from the `retrieval_evaluat
 
 ---
 
-**Conclusion:** 
-The pipeline successfully extracted, chunks, embedded, and mapped 100% of user queries to the correct vector records, demonstrating production-ready semantic matching across 5 distinct intent categories.
+**Interpretation:** These historical examples show relevant records for the listed queries, but do not establish overall answer accuracy, citation correctness across the whole knowledge base, or production readiness. The current executable evaluation report is the source for current retrieval metrics.
