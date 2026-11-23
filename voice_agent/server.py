@@ -18,20 +18,6 @@ if str(project_root) not in sys.path:
 
 from voice_agent.rag_tool import execute_query_knowledge_base, execute_submit_lead_to_crm
 
-app = FastAPI(
-    title="Nova AI Real-Time Agent Bridge",
-    description="Backend integrating Vapi.ai voice agents with CRM logic and Pinecone RAG.",
-    version="1.0.0"
-)
-
-# Allow CORS for local testing or web calling UI
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("[SYSTEM] Pre-loading FastEmbed ONNX model into RAM...")
@@ -49,7 +35,21 @@ async def lifespan(app: FastAPI):
     print("[SYSTEM] FastAPI application is shutting down.")
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Nova AI Real-Time Agent Bridge",
+    description="Backend integrating Vapi.ai voice agents with CRM logic and Pinecone RAG.",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# Allow CORS for local testing, Vercel frontend, and web calling UI
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 logger = logging.getLogger(__name__)
 
 
